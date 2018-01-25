@@ -77,7 +77,7 @@ def trackTimestep(root):
 
 directory = '/u/hhakoby1/outputs/old_merging/'
 
-mag_e, part_e, phot_e, prs_e, nph, rl_nph = trackEnergy(directory, 88, True, True)
+mag_e, part_e, phot_e, prs_e, nph, rl_nph = trackEnergy(directory, 107, True, True)
 laps, total = trackTimestep(directory)
 
 np.savetxt('/u/hhakoby1/vis/old_energies.out', (mag_e, part_e, phot_e, prs_e, nph, rl_nph))
