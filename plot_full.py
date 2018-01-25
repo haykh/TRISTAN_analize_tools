@@ -59,7 +59,7 @@ for step in range(start, min(max_number, end), 5):
     bsquared = bx**2 + by**2 + bz**2
     ecrossb /= bsquared
     multiplicity = divideArray(denbw, dens - denbw)
-    
+
     photons = getPhotons(root, step)
     plasma = getPlasma(root, step)
     pairs = plasma[plasma.ind < 0]
@@ -116,7 +116,7 @@ for step in range(start, min(max_number, end), 5):
     cnt = ax01.contour(x, y, multiplicity, levels = [1.], colors = '#f4b942', linewidths = 1.0)
     cbar01.add_lines(cnt, erase=False)
     cnt.collections[0].set_label('multiplcity = 1')
-    legend = ax01.legend(loc='upper right',fontsize=global_fontsize, facecolor='white')
+    legend = ax01.legend(loc='upper right',fontsize=global_fontsize)
     legend.get_frame().set_facecolor('#ffffff')
     legend.get_frame().set_alpha(0.9)
     (cbar01.ax.get_children()[1]).set_linewidths(2)
