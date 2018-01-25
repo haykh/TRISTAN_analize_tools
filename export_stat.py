@@ -24,7 +24,7 @@ def trackEnergy(root, finstep, photQ, pairQ):
     npart = []
     realnpart = []
     for step in range(-1, finstep):
-        print 100. * step / finstep
+        print int(100. * step / finstep)
         bx = getField(root, step, 'bx', getSizes(root, step))
         by = getField(root, step, 'by', getSizes(root, step))
         bz = getField(root, step, 'bz', getSizes(root, step))
@@ -72,8 +72,6 @@ def trackTimestep(root):
                 laps.append(float(re.findall("\d+", line)[0]))
             if 'Total, sec' in line:
                 temp = float(re.findall("\d\.\d\d..\d\d", line)[0])
-                temp_pcent = float(re.findall("(\d+\.\d*)%", line)[0])
-                temp += temp * temp_pcent / 100.
                 total.append(temp)
     return (np.array(laps), np.array(total))
 
