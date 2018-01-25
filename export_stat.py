@@ -35,7 +35,7 @@ def trackEnergy(root, finstep, photQ, pairQ):
         if pairQ:
             pairs = plasma[plasma.ind < 0]
             plasma = plasma[plasma.ind > 0]
-        b_tot = np.sum(b_en) * code_downsampling**2 * 2. * np.pi
+        b_tot = np.sum(b_en) * code_downsampling**2
         prtl_tot = np.sum(plasma.g) * stride
         if pairQ:
             pair_tot = np.sum(pairs.g) * stride

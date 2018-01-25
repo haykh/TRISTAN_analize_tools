@@ -16,7 +16,7 @@ from matplotlib import rc
 rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
 rc('text', usetex=True)
 
-root = '../outputs/run_01/'
+root = '../outputs/new_merging/'
 
 compare_nobw = False
 if compare_nobw:
