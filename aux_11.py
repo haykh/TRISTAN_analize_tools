@@ -67,7 +67,7 @@ def getField(root, i, param, sizes):
 def getNumberOfFiles(directory):
     x = 0
     for root, dirs, files in os.walk(directory):
-        x = sum(['flds' in fn for fn in files])
+        x += sum(['flds' in fn for fn in files])
     return x
 
 
