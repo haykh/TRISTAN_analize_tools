@@ -79,8 +79,10 @@ for step in range(start, min(max_number, end), 5):
 
     xmin = x.min()
     xmax = x.max()
-    ymin = -100 / (skin_depth / 10.)
-    ymax = 100 / (skin_depth / 10.)
+    ymin = y.min()
+    ymax = y.max()
+    # ymin = -100 / (skin_depth / 10.)
+    # ymax = 100 / (skin_depth / 10.)
 
     ax00.streamplot(x, y, by, bx, color = (1,1,1,0.5), density = 0.6, linewidth = 1.2)
 
