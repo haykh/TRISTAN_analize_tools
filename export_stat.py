@@ -6,7 +6,7 @@ import re
 from aux_11 import *
 from parser import define_variables
 
-def trackEnergy(root, finstep, photQ, pairQ):
+def trackEnergy(root, finstep):
     simulation_variables = define_variables(root)
 
     code_downsampling = simulation_variables['code_downsampling']
@@ -20,49 +20,41 @@ def trackEnergy(root, finstep, photQ, pairQ):
     magnetic_energy = []
     particle_energy = []
     photons_energy = []
-    pairs_energy = []
     npart = []
     realnpart = []
-    for step in range(-1, finstep):
+    for step in range(0, finstep):
         print int(100. * step / finstep), '%'
-        data = h5py.File(root + 'flds.tot.{}'.format(str(step + 1).zfill(3)), 'r')
+        # B-field
+        data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)), 'r')
         bx = data['bx'].value
         by = data['by'].value
         bz = data['bz'].value
         ex = data['ex'].value
         ey = data['ey'].value
         ez = data['ez'].value
-        b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_downsampling**2 / (2. * m_el * speed_of_light**2)
-        plasma = getPlasma(root, step)
-        if photQ:
-            photons = getPhotons(root, step)
-        if pairQ:
-            pairs = plasma[plasma.ind < 0]
-            plasma = plasma[plasma.ind > 0]
-        b_tot = np.sum(b_en) * code_downsampling**2
-        prtl_tot = np.sum(plasma.g - 1) * stride
-        if pairQ:
-            pair_tot = np.sum(pairs.g) * stride
-        if photQ:
-            phot_tot = np.sum(photons.e * photons.ch) * stride
-            npart.append(len(photons) * stride)
-            realnpart.append(np.sum(photons.ch) * stride)
-        magnetic_energy.append(b_tot)
-        particle_energy.append(prtl_tot)
-        if pairQ:
-            pairs_energy.append(pair_tot)
-        if photQ:
-            photons_energy.append(phot_tot)
-    if not pairQ:
-        pairs_energy = np.array(magnetic_energy) * 0.
-    if not photQ:
-        phot_energy = np.array(magnetic_energy) * 0.
-        npart = phot_energy
-        realnpart = npart
+        b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_dwn**2 / (2. * m_el * speed_of_light**2)
+
+        # particles
+        data = h5py.File(root + 'prtl.tot.{}'.format(str(step).zfill(3)), 'r')
+        prtl_en = 2. * np.sum(data['gammae'].value - 1.) * stride
+
+        # photons
+        data = h5py.File(root + 'phot.tot.{}'.format(str(step).zfill(3)), 'r')
+        u = data['up'].value
+        v = data['vp'].value
+        w = data['wp'].value
+        ch = data['chp'].value
+        phot_en = np.sum(np.sqrt(u**2 + v**2 + w**2) * ch) * stride
+
+        npart.append(len(data['up'].value) * stride)
+        realnpart.append(np.sum(data['chp'].value) * stride)
+
+        magnetic_energy.append(b_en)
+        particle_energy.append(prtl_en)
+        photons_energy.append(phot_en)
     return (np.array(magnetic_energy),
             np.array(particle_energy),
             np.array(photons_energy),
-            np.array(pairs_energy),
             np.array(npart),
             np.array(realnpart))
 
@@ -81,8 +73,8 @@ def trackTimestep(root):
 
 directory = '/u/hhakoby1/outputs/old_merging/'
 
-mag_e, part_e, phot_e, prs_e, nph, rl_nph = trackEnergy(directory, 107, True, False)
+mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, 160)
 laps, total = trackTimestep(directory)
 
-np.savetxt('/u/hhakoby1/vis/old_energies.out', (mag_e, part_e, phot_e, prs_e, nph, rl_nph))
+np.savetxt('/u/hhakoby1/vis/old_energies.out', (mag_e, part_e, phot_e, nph, rl_nph))
 np.savetxt('/u/hhakoby1/vis/old_timesteps.out', (laps, total))
