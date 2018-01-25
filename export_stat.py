@@ -82,5 +82,5 @@ directory = '~/outputs/new_merging/'
 mag_e, part_e, phot_e, prs_e, nph, rl_nph = trackEnergy(directory, 88, True, True)
 laps, total = trackTimestep(directory)
 
-np.savetxt('new_energies.out', (mag_e, part_e, phot_e, prs_e, nph, rl_nph))
-np.savetxt('new_timesteps.out', (laps, total))
+np.savetxt('~/vis/new_energies.out', (mag_e, part_e, phot_e, prs_e, nph, rl_nph))
+np.savetxt('~/vis/new_timesteps.out', (laps, total))
