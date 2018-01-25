@@ -28,7 +28,7 @@ def trackEnergy(root, finstep, photQ, pairQ):
         bx = getField(root, step, 'bx', getSizes(root, step))
         by = getField(root, step, 'by', getSizes(root, step))
         bz = getField(root, step, 'bz', getSizes(root, step))
-        b_en = (bx**2 + by**2 + bz**2) / (2. * m_el * speed_of_light**2)
+        b_en = (bx**2 + by**2 + bz**2) / (m_el * speed_of_light**2)
         plasma = getPlasma(root, step)
         if photQ:
             photons = getPhotons(root, step)
