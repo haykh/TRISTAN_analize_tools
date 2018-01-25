@@ -14,10 +14,10 @@ plt.register_cmap(name='viridis', cmap=viridis_cmap)
 plt.register_cmap(name='magma', cmap=magma_cmap)
 plt.register_cmap(name='inferno', cmap=inferno_cmap)
 
-# from matplotlib import rc
-#
-# rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
-# rc('text', usetex=True)
+from matplotlib import rc
+
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('text', usetex=True)
 
 global_fontsize = 15
 
