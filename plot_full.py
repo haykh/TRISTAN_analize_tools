@@ -15,7 +15,7 @@ from aux_11 import *
 from plotter import *
 from parser import define_variables
 
-root = '/u/hhakoby1/outputs/new_merging/'
+root = '~/outputs/new_merging/'
 
 output_dir = root + 'pics/'
 
