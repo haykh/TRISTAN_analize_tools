@@ -1,0 +1,189 @@
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+import copy
+
+from aux_11 import *
+from color_data import plasma_cmap
+from color_data import viridis_cmap
+from color_data import magma_cmap
+from color_data import inferno_cmap
+plt.register_cmap(name='plasma', cmap=plasma_cmap)
+plt.register_cmap(name='viridis', cmap=viridis_cmap)
+plt.register_cmap(name='magma', cmap=magma_cmap)
+plt.register_cmap(name='inferno', cmap=inferno_cmap)
+
+from matplotlib import rc
+
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('text', usetex=True)
+
+global_fontsize = 15
+
+# def plot_dens(ax, x, y,
+#               dens, maximum_dens,
+#               label,
+#               xmin, xmax, ymin, ymax,
+#               cmap, scaling = 'log', power = 1, n_colorbar = 5):
+#     divider = make_axes_locatable(ax)
+#     cax = divider.append_axes("right", size="2%", pad=0.05)
+#     if scaling == 'log':
+#         strm = ax.pcolormesh(x, y, np.log(dens**power + 1.), cmap=cmap, vmin=np.log(1.001), vmax=np.log(maximum_dens**power + 1.001))
+#         cbar = plt.colorbar(strm, cax = cax)
+#         cbar.set_ticks(np.linspace(np.log(1.001), np.log(maximum_dens**power + 1), n_colorbar))
+#         values = map(fmt, np.round(np.exp(np.linspace(np.log(1.001), np.log(maximum_dens + 1.001), n_colorbar)) - 1., 2))
+#     elif scaling == 'lin':
+#         strm = ax.pcolormesh(x, y, dens**power, cmap=cmap, vmin=0, vmax=maximum_dens**power)
+#         cbar = plt.colorbar(strm, cax = cax)
+#         cbar.set_ticks(np.linspace(0, maximum_dens**power, n_colorbar))
+#         values = np.round(np.linspace(0, maximum_dens, n_colorbar), 4)
+#     elif scaling == 'symlin':
+#         strm = ax.pcolormesh(x, y, np.sign(dens) * np.abs(dens)**power, cmap=cmap, vmin=-maximum_dens**power, vmax=maximum_dens**power)
+#         cbar = plt.colorbar(strm, cax = cax)
+#         cbar.set_ticks(np.linspace(-maximum_dens**power, maximum_dens**power, n_colorbar))
+#         values = np.round(np.linspace(-maximum_dens, maximum_dens, n_colorbar), 4)
+#     else:
+#         print ('Only `lin`, `log` & `symlin` scalings supported.')
+#         exit()
+#     cbar.set_ticklabels(values)
+#     cbar.ax.yaxis.set_tick_params(pad=10)
+#     ax.set_xlim(xmin, xmax)
+#     ax.set_ylim(ymin, ymax)
+#     cbar.ax.tick_params(labelsize=global_fontsize)
+#
+#     ax.tick_params(axis='both', labelsize=global_fontsize)
+#     ax.set_aspect(1)
+#     ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=global_fontsize)
+#
+#     props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
+#     ax.text(0.02, 0.95, label, transform=ax.transAxes, fontsize=global_fontsize, verticalalignment='top', bbox=props)
+#
+#     return ax
+
+def plot_dens(ax, x, y,
+              dens, vmin, vmax,
+              label,
+              xmin, xmax, ymin, ymax,
+              cmap, scaling, setover = None, setunder = None, extend = 'neither', ret_cbar = False):
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="2%", pad=0.05)
+    my_cmap = copy.copy(mpl.cm.get_cmap(cmap))
+    if setunder is None:
+        my_cmap.set_bad(my_cmap(0))
+        my_cmap.set_under(my_cmap(0))
+    else:
+        my_cmap.set_bad(setunder)
+        my_cmap.set_under(setunder)
+    if setover is None:
+        my_cmap.set_over(my_cmap(255))
+    else:
+        my_cmap.set_over(setover)
+    if scaling == 'log':
+        strm = ax.pcolormesh(x, y, dens, cmap=my_cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+    elif scaling == 'lin':
+        strm = ax.pcolormesh(x, y, dens, cmap=cmap, vmin=vmin, vmax=vmax)
+    elif scaling == 'symlog':
+        strm = ax.pcolormesh(x, y, dens, cmap=cmap, norm=mpl.colors.SymLogNorm(linthresh=vmax/10., vmin=vmin, vmax=vmax))
+    cbar = plt.colorbar(strm, cax = cax, extend=extend)
+    cbar.ax.yaxis.set_tick_params(pad=10)
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
+    cbar.ax.tick_params(labelsize=global_fontsize)
+    ax.tick_params(axis='both', labelsize=global_fontsize)
+    ax.set_aspect(1)
+    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=global_fontsize)
+    props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
+    ax.text(0.02, 0.95, label, transform=ax.transAxes, fontsize=global_fontsize, verticalalignment='top', bbox=props)
+    if ret_cbar:
+        return (cbar, ax)
+    else:
+        return ax
+
+def plot_spectrum(ax, prtls, stride = 1,
+                  label = None, color = 'black', ls = '-',
+                  weights = None, min_e = 1e-1, max_e = 1e3):
+
+    cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 300), weights = weights)
+    cnts = cnts * stride / np.diff(bns)
+    bns = average(bns)
+    # bns = np.power(10, bns)
+    ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
+
+    if label == 'plasma':
+        ax.set_xscale('log')
+        ax.set_yscale('log', nonposy='clip')
+        ax.yaxis.tick_left()
+        ax.yaxis.set_label_position("left")
+
+        ax.legend(loc='upper center', ncol=5, fontsize=global_fontsize)
+        ax.ticklabel_format(fontsize=global_fontsize)
+
+        ax.set_xlim(min_e, max_e)
+        ax.set_ylim(1e0, 1e10)
+        ax.set_xlabel(r'$\gamma$', fontsize=global_fontsize)
+        ax.set_ylabel(r'$f(\gamma)$', fontsize=global_fontsize)
+
+        ax.plot([1e2,1e4], [1e9, 1e7], color='purple', ls='--')
+        ax.text(2e3, 5e8, r'$\propto\gamma^{-1}$', fontsize=1.2*global_fontsize)
+    ax.tick_params(axis='both', labelsize=global_fontsize)
+    return ax
+
+def plot_temperature(ax, plasma,
+                     xmin, xmax, ymin, ymax,
+                     max_g, skin_depth = 10, dwn = 8):
+    dx = plasma.x.max() - plasma.x.min()
+    dy = plasma.y.max() - plasma.y.min()
+    cnts1, xed, yed = np.histogram2d(plasma.y, plasma.x, bins=(int(dy / dwn),int(dx / dwn)))
+    cnts2, xed, yed = np.histogram2d(plasma.y, plasma.x, bins=(int(dy / dwn),int(dx / dwn)), weights=plasma.g)
+    cnts = divideArray(cnts2, cnts1)
+
+    cnts = np.transpose(cnts)
+
+    x = np.arange(len(cnts[0])) * dwn / skin_depth
+    x -= (x.max() + x.min())*0.5
+    y = np.arange(len(cnts)) * dwn / skin_depth
+    y -= (y.max() + y.min())*0.5
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="2%", pad=0.05)
+    pcol = ax.pcolormesh(x, y, cnts, vmin = 0, vmax = max_g, cmap = 'inferno')
+    cbar = plt.colorbar(pcol, cax = cax, extend='max')
+    cbar.ax.tick_params(labelsize=global_fontsize)
+    ax.set_aspect(1)
+    ax.set_ylim(ymin, ymax)
+    ax.set_xlim(xmin, xmax)
+    ax.tick_params(axis='both', labelsize=global_fontsize)
+    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=global_fontsize)
+    props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
+    ax.text(0.02, 0.95, r'Average $\gamma$', transform=ax.transAxes, fontsize=global_fontsize, verticalalignment='top', bbox=props)
+    return ax
+
+def plot_stat(ax, root, step,
+              epsph_min, epsph_max):
+    if not os.path.isfile(root + 'stat.tot.' + str(step+1).zfill(3)):
+        return ax
+    data = h5py.File(root + 'stat.tot.' + str(step+1).zfill(3),'r')
+    E1s = data['E1'].value
+    E2s = data['E2'].value
+    cosphis = data['cosph'].value
+    E2s = E2s[(E1s != -2) & (E1s != 0)]
+    cosphis = cosphis[(E1s != -2) & (E1s != 0)]
+    E1s = E1s[(E1s != -2) & (E1s != 0)]
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="2%", pad=0.05)
+    p = ax.scatter(E1s, E2s, s=5, c=np.arccos(cosphis)*180/np.pi)
+    ax.plot(np.logspace(-4,4,100),1/np.logspace(-4,4,100), c='black', ls='--')
+    cbar = plt.colorbar(p, cax = cax)
+    cbar.set_label('relative angle', rotation=90, fontsize=global_fontsize)
+    cbar.ax.tick_params(labelsize=global_fontsize)
+    ax.tick_params(axis='both', labelsize=global_fontsize)
+    ax.set_xlabel(r'$\varepsilon_1$, [$m_ec^2$]', fontsize=global_fontsize)
+    ax.set_ylabel(r'$\varepsilon_2$, [$m_ec^2$]', fontsize=global_fontsize)
+    ax.set_yscale('log')
+    ax.set_xscale('log')
+    ax.set_xlim(epsph_min, epsph_max)
+    ax.set_ylim(epsph_min, epsph_max)
+    ax.set_aspect(1)
+    return ax
