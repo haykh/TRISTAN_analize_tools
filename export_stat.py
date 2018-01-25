@@ -32,7 +32,7 @@ def trackEnergy(root, finstep):
         ex = data['ex'].value
         ey = data['ey'].value
         ez = data['ez'].value
-        b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_dwn**2 / (2. * m_el * speed_of_light**2)
+        b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_downsampling**2 / (2. * m_el * speed_of_light**2)
 
         # particles
         data = h5py.File(root + 'prtl.tot.{}'.format(str(step).zfill(3)), 'r')
