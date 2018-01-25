@@ -59,11 +59,7 @@ for step in range(start, min(max_number, end), 5):
     bsquared = bx**2 + by**2 + bz**2
     ecrossb /= bsquared
     multiplicity = divideArray(denbw, dens - denbw)
-
-    if compare_nobw:
-        photons_nobw = getPhotons(root_nobw, step)
-        plasma_nobw = getPlasma(root_nobw, step)
-
+    
     photons = getPhotons(root, step)
     plasma = getPlasma(root, step)
     pairs = plasma[plasma.ind < 0]
