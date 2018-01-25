@@ -119,7 +119,6 @@ for step in range(start, min(max_number, end), 5):
     legend = ax01.legend(loc='upper right',fontsize=global_fontsize)
     legend.get_frame().set_facecolor('#ffffff')
     legend.get_frame().set_alpha(0.9)
-    (cbar01.ax.get_children()[1]).set_linewidths(2)
     for legobj in legend.legendHandles:
         legobj.set_linewidth(2.0)
 
