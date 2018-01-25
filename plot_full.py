@@ -1,4 +1,6 @@
 import h5py
+import matplotlib
+matplotlib.use("agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.colors as colors
@@ -78,7 +80,6 @@ for step in range(start, min(max_number, end), 5):
     ax01 = plt.subplot2grid((3,6),(0,3),colspan=3)
     ax11 = plt.subplot2grid((3,6),(1,3),colspan=3)
     ax21 = plt.subplot2grid((3,6),(2,3),colspan=3)
-    # ax21 = plt.subplot2grid((3,6),(2,3),colspan=3)
 
     xmin = x.min()
     xmax = x.max()
@@ -136,9 +137,6 @@ for step in range(start, min(max_number, end), 5):
                                  label='photons', color = 'black',
                                  weights = photons.ch, max_e = 1e4)
 
-    if compare_nobw:
-        ax21 = plot_spectrum(ax21, plasma_nobw.g, stride=stride,
-                             label='plasma (no pp)', color = (0,0,1,1), ls = '--', max_e = 1e4)
     if len(pairs) > 0:
         ax21 = plot_spectrum(ax21, pairs.g, stride=stride,
                              label='pairs', color = (1,0,0,1), max_e = 1e4)
