@@ -24,7 +24,7 @@ def trackEnergy(root, finstep, photQ, pairQ):
     npart = []
     realnpart = []
     for step in range(-1, finstep):
-        print int(100. * step / finstep)
+        print int(100. * step / finstep), '\%'
         bx = getField(root, step, 'bx', getSizes(root, step))
         by = getField(root, step, 'by', getSizes(root, step))
         bz = getField(root, step, 'bz', getSizes(root, step))
