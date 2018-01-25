@@ -6,11 +6,6 @@ import numpy as np
 import matplotlib.colors as colors
 import pandas as pd
 
-from matplotlib import rc
-
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
-rc('text', usetex=True)
-
 from aux_11 import *
 from plotter import *
 from parser import define_variables
