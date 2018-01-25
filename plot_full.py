@@ -1,5 +1,4 @@
 import h5py
-from matplotlib.mlab import bivariate_normal
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -9,12 +8,6 @@ import pandas as pd
 from aux_11 import *
 from plotter import *
 from parser import define_variables
-import helper as hlp
-
-from matplotlib import rc
-
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
-rc('text', usetex=True)
 
 root = '../outputs/new_merging/'
 
