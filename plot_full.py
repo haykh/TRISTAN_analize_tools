@@ -67,7 +67,7 @@ for step in range(start, min(max_number, end), 5):
     y = (np.arange(len(dens)) - max(np.arange(len(dens))) * 0.5) * code_downsampling / skin_depth
     x, y = np.meshgrid(x, y)
 
-    fig = plt.figure(figsize=(26, 13))
+    fig = plt.figure(figsize=(15, 15))
     global_fontsize = 15
 
     ax00 = plt.subplot2grid((3,6),(0,0),colspan=3)
