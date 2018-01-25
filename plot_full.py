@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.colors as colors
-import pandas as pdmv 
+import pandas as pd
 
 from aux_11 import *
 from plotter import *
@@ -70,7 +70,7 @@ for step in range(start, min(max_number, end), 5):
     bsquared = bx**2 + by**2 + bz**2
     ecrossb /= bsquared
     multiplicity = divideArray(denbw, dens - denbw)
-    
+
     if compare_nobw:
         photons_nobw = getPhotons(root_nobw, step)
         plasma_nobw = getPlasma(root_nobw, step)
@@ -110,7 +110,7 @@ for step in range(start, min(max_number, end), 5):
                      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                      cmap = 'plasma',
                      scaling = 'log', setover = 'red', extend = 'both', ret_cbar = True)
-    
+
 #     cnt = ax00.contour(x, y, dens / ppc0, levels = [bw_dens_lim / ppc0], colors = '#a3ff82', linewidths = 1.0)
 #     cbar00.add_lines(cnt, erase=False)
 #     cnt.collections[0].set_label('p-p limit')
@@ -133,19 +133,19 @@ for step in range(start, min(max_number, end), 5):
                      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                      cmap = 'afmhot',
                      scaling = 'log', extend = 'both')
-    
+
     cbar01, ax01 = plot_dens(ax01, x, y,
                      multiplicity, vmin = 1e-1, vmax = 100, label = 'pair-plasma multiplicity',
                      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                      cmap = 'inferno',
                      scaling = 'log', setover = 'white', extend = 'both', ret_cbar = True)
-    
+
     ax20 = plot_dens(ax20, x, y,
                      np.sqrt(bsquared / np.mean(bsquared[1])), vmin = 1e-2, vmax = 30, label = r'$B/B_{\rm up}$',
                      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                      cmap = 'inferno',
                      scaling = 'log', setover = 'red', extend = 'both')
-    
+
     cnt = ax01.contour(x, y, multiplicity, levels = [1.], colors = '#f4b942', linewidths = 1.0)
     cbar01.add_lines(cnt, erase=False)
     cnt.collections[0].set_label('multiplcity = 1')
@@ -155,18 +155,18 @@ for step in range(start, min(max_number, end), 5):
     (cbar01.ax.get_children()[1]).set_linewidths(2)
     for legobj in legend.legendHandles:
         legobj.set_linewidth(2.0)
-    
+
 #     ax20 = plot_temperature(ax20, plasma,
 #                     xmin, xmax, ymin, ymax,
 #                     max_g = 50, skin_depth = skin_depth, dwn = 8)
-    
+
 #     exmax = max(ex.max(), -ex.min())**0.3
 #     ax20 = plot_dens(ax20, x, y,
 #                      np.sign(ex) * np.abs(ex)**0.3, vmin = -exmax, vmax = exmax, label = r'$\pm|E_x|^{0.3}$',
 #                      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
 #                      cmap = 'bwr',
 #                      scaling = 'lin', extend = 'neither')
-    
+
     ax11 = plot_dens(ax11, x, y,
                      dnpair, vmin = 1e-2, vmax = 10, label = r'pairs formed at a given timestep',
                      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
@@ -206,7 +206,6 @@ for step in range(start, min(max_number, end), 5):
         ax21 = plot_spectrum(ax21, plasma.g,
                              stride=stride,
                              label='plasma', color = 'blue', max_e = 1e4)
-    
+
     plt.tight_layout()
     plt.savefig(output_dir + "all_" + str(step+1).zfill(3) + ".png", dpi=150)
-
