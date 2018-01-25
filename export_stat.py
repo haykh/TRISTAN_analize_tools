@@ -25,10 +25,14 @@ def trackEnergy(root, finstep, photQ, pairQ):
     realnpart = []
     for step in range(-1, finstep):
         print int(100. * step / finstep), '%'
-        bx = getField(root, step, 'bx', getSizes(root, step))
-        by = getField(root, step, 'by', getSizes(root, step))
-        bz = getField(root, step, 'bz', getSizes(root, step))
-        b_en = (bx**2 + by**2 + bz**2) / (m_el * speed_of_light**2)
+        data = h5py.File(root + 'flds.tot.{}'.format(str(step + 1).zfill(3)), 'r')
+        bx = data['bx'].value
+        by = data['by'].value
+        bz = data['bz'].value
+        ex = data['ex'].value
+        ey = data['ey'].value
+        ez = data['ez'].value
+        b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_downsampling**2 / (2. * m_el * speed_of_light**2)
         plasma = getPlasma(root, step)
         if photQ:
             photons = getPhotons(root, step)
@@ -36,7 +40,7 @@ def trackEnergy(root, finstep, photQ, pairQ):
             pairs = plasma[plasma.ind < 0]
             plasma = plasma[plasma.ind > 0]
         b_tot = np.sum(b_en) * code_downsampling**2
-        prtl_tot = np.sum(plasma.g) * stride
+        prtl_tot = np.sum(plasma.g - 1) * stride
         if pairQ:
             pair_tot = np.sum(pairs.g) * stride
         if photQ:
