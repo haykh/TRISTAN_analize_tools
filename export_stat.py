@@ -26,7 +26,7 @@ def trackEnergy(root, finstep):
     photons_energy = []
     npart = []
     realnpart = []
-    for step in range(0, finstep):
+    for step in tqdm(range(0, finstep)):
         print int(100. * step / finstep), '%'
         # B-field
         data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)), 'r')
