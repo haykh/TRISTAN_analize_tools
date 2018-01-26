@@ -10,7 +10,7 @@ from aux_11 import *
 from plotter import *
 from parser import define_variables
 
-root = '../../outputs/old_merging/'
+root = '../../outputs/test_sd3/'
 
 output_dir = root + 'pics/'
 
