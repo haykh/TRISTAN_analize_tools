@@ -1,3 +1,7 @@
+import sys
+sys.path.append('tqdm/build/lib')
+from tqdm import tqdm
+
 import h5py
 import pandas as pd
 import numpy as np
@@ -73,7 +77,7 @@ def trackTimestep(root):
 
 directory = '/u/hhakoby1/outputs/new_merging/'
 
-mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, 160)
+mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, 98)
 laps, total = trackTimestep(directory)
 
 np.savetxt('/u/hhakoby1/vis/new_energies.out', (mag_e, part_e, phot_e, nph, rl_nph))
