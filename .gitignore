@@ -1,6 +1,5 @@
 *.pyc
 pics/
-tqdm/
 *.zip
 *.ipynb
 *.py~
