@@ -1,5 +1,5 @@
 import sys
-sys.path.append('tqdm/build/lib')
+sys.path.append('/u/hhakoby1/vis/tqdm/')
 from tqdm import tqdm
 
 import h5py
