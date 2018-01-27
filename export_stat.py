@@ -48,7 +48,9 @@ def trackEnergy(root, finstep):
         v = data['vp'].value
         w = data['wp'].value
         ch = data['chp'].value
-        phot_en = np.sum(np.sqrt(u**2 + v**2 + w**2) * ch) * stride
+        phot_en = np.sqrt(u**2 + v**2 + w**2) * ch
+        phot_en = phot_en[~ np.isnan(phot_en)]
+        phot_en = np.sum(phot_en) * stride
 
         npart.append(len(data['up'].value) * stride)
         realnpart.append(np.sum(data['chp'].value) * stride)
