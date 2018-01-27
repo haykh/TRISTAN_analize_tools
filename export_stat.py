@@ -75,10 +75,10 @@ def trackTimestep(root):
                 total.append(temp)
     return (np.array(laps), np.array(total))
 
-directory = '/u/hhakoby1/outputs/no_merging/'
+directory = '/u/hhakoby1/outputs/new_merging/'
 
-mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, 98)
+mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, 95)
 laps, total = trackTimestep(directory)
 
-np.savetxt('/u/hhakoby1/vis/no_energies.out', (mag_e, part_e, phot_e, nph, rl_nph))
-np.savetxt('/u/hhakoby1/vis/no_timesteps.out', (laps, total))
+np.savetxt('/u/hhakoby1/vis/new_energies.out', (mag_e, part_e, phot_e, nph, rl_nph))
+np.savetxt('/u/hhakoby1/vis/new_timesteps.out', (laps, total))
