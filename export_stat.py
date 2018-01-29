@@ -81,7 +81,7 @@ directory = '/u/hhakoby1/outputs/{}_merging/'.format(name)
 
 nfiles = raw_input('# of files: ')
 
-mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, nfiles)
+mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, int(nfiles))
 laps, total = trackTimestep(directory)
 
 np.savetxt('/u/hhakoby1/vis/{}_energies.out'.format(name), (mag_e, part_e, phot_e, nph, rl_nph))
