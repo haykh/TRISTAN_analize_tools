@@ -1,10 +1,10 @@
-import numpy as np
+str(i)import numpy as np
 import h5py
 import os, os.path
 import pandas as pd
 
 def getPlasma(root, i):
-    data2 = h5py.File(root + 'prtl.tot.' + str(i+1).zfill(3),'r')
+    data2 = h5py.File(root + 'prtl.tot.' + str(i).zfill(3),'r')
     gammae = np.sqrt(1. + data2['ue'].value**2 + data2['ve'].value**2 + data2['we'].value**2)
     gammai = np.sqrt(1. + data2['ui'].value**2 + data2['vi'].value**2 + data2['wi'].value**2)
     plasma = pd.DataFrame({'x': np.concatenate((data2['xe'].value, data2['xi'].value)),
@@ -19,8 +19,8 @@ def getPlasma(root, i):
     return plasma
 
 def getPhotons(root, i):
-    if os.path.isfile(root + 'phot.tot.' + str(i+1).zfill(3)):
-        data1 = h5py.File(root + 'phot.tot.' + str(i+1).zfill(3),'r')
+    if os.path.isfile(root + 'phot.tot.' + str(i).zfill(3)):
+        data1 = h5py.File(root + 'phot.tot.' + str(i).zfill(3),'r')
         energy = np.sqrt(data1['up'].value**2 + data1['vp'].value**2 + data1['wp'].value**2)
         phots = pd.DataFrame({'ch': data1['chp'].value,
                               'x': data1['xp'].value,
@@ -36,7 +36,7 @@ def getPhotons(root, i):
     return phots
 
 def getSizes(root, i):
-    f1=h5py.File(root + 'flds.tot.' + str(i+1).zfill(3),'r')
+    f1=h5py.File(root + 'flds.tot.' + str(i).zfill(3),'r')
     hh=f1['densi'].value
     hh1=hh[0,:,:]
     hh1=np.transpose(hh1)
@@ -52,7 +52,7 @@ def getField(root, i, param, sizes):
     xmax = -1
     ymin = 0
     ymax = -1
-    f1 = h5py.File(root + 'flds.tot.' + str(i+1).zfill(3),'r')
+    f1 = h5py.File(root + 'flds.tot.' + str(i).zfill(3),'r')
     if param in f1.keys():
         hh = f1[param].value
     else:
