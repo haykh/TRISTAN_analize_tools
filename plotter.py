@@ -65,6 +65,8 @@ def plot_spectrum(ax, prtls, stride = 1,
     bns = average(bns)
     cnts *= bns # for: gamma d f(gamma) / d gamma
     # bns = np.power(10, bns)
+    bns = bns[cnts != 0]
+    cnts = cnts[cnts != 0]
     spec_func = interp1d(bns, cnts, kind='cubic')
     # ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
     bns_new = np.linspace(bns[0], bns[-1], 1000)
