@@ -77,7 +77,7 @@ def plot_spectrum(ax, prtls, stride = 1,
 
         ax.set_xlim(min_e, max_e)
         ax.set_ylim(min_n, max_n)
-        ax.set_xlabel(r'$\varepsilon$, $\[m_e c^2\]$', fontsize=global_fontsize)
+        ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=global_fontsize)
         ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=global_fontsize)
 
         # ax.plot([1e2,1e4], [1e9, 1e7], color='purple', ls='--')
