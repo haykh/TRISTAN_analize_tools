@@ -79,7 +79,9 @@ def trackTimestep(root):
 name = raw_input('Name of a file: ')
 directory = '/u/hhakoby1/outputs/{}_merging/'.format(name)
 
-mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, 45)
+nfiles = raw_input('# of files: ')
+
+mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, nfiles)
 laps, total = trackTimestep(directory)
 
 np.savetxt('/u/hhakoby1/vis/{}_energies.out'.format(name), (mag_e, part_e, phot_e, nph, rl_nph))
