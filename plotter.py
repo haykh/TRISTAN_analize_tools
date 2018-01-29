@@ -14,7 +14,7 @@ plt.register_cmap(name='viridis', cmap=viridis_cmap)
 plt.register_cmap(name='magma', cmap=magma_cmap)
 plt.register_cmap(name='inferno', cmap=inferno_cmap)
 
-global_fontsize = 20
+global_fontsize = 15
 
 def plot_dens(ax, x, y,
               dens, vmin, vmax,
@@ -57,7 +57,7 @@ def plot_dens(ax, x, y,
 
 def plot_spectrum(ax, prtls, stride = 1,
                   label = None, color = 'black', ls = '-',
-                  weights = None, min_e = 1e-1, max_e = 1e3):
+                  weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10):
 
     cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 300), weights = weights)
     cnts = cnts * stride / np.diff(bns)
@@ -76,7 +76,7 @@ def plot_spectrum(ax, prtls, stride = 1,
         ax.ticklabel_format(fontsize=global_fontsize)
 
         ax.set_xlim(min_e, max_e)
-        ax.set_ylim(1e0, 1e10)
+        ax.set_ylim(min_n, max_n)
         ax.set_xlabel(r'$\varepsilon$, $\[m_e c^2\]$', fontsize=global_fontsize)
         ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=global_fontsize)
 
