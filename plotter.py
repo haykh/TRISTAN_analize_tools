@@ -79,11 +79,16 @@ def plot_spectrum(ax, prtls, stride = 1,
     bns_new = np.logspace(np.log10(bns[0]), np.log10(bns[-1]), 1000)
 
     # using interp1d
-    spec_func = log_interp1d(bns, cnts)
+    spec_func = log_interp1d(bns, cnts, kind='cubic')
+
+    # using splred/splev
+    spl = interpolate.splrep(bns, cnts, s = 1)
+    cnts_new = interpolate.splev(bns_new, spl)
 
     # ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
 
     ax.plot(bns_new, spec_func(bns_new), color = color, ls = ls, label = label, linewidth = 0.8)
+    ax.plot(bns_new, cnts_new, color = color, ls = '--', label = label, linewidth = 0.8)
     ax.plot(bns, cnts, color = color, ls = ':', label = label, linewidth = 0.8)
 
     if label == 'plasma':
