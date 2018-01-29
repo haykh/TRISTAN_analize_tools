@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import copy
+from scipy.interpolate import interp1d
 
 from aux_11 import *
 from color_data import plasma_cmap
@@ -64,7 +65,11 @@ def plot_spectrum(ax, prtls, stride = 1,
     bns = average(bns)
     cnts *= bns # for: gamma d f(gamma) / d gamma
     # bns = np.power(10, bns)
-    ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
+    spec_func = interp1d(bns, cnts, kind='cubic')
+    # ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
+    bns_new = np.linspace(bns[0], bns[-1], 1000)
+    ax.plot(bns_new, spec_func(bns_new), color = color, ls = ls, label = label, linewidth = 0.8)
+    ax.plot(bns, cnts, color = color, ls = ':', label = label, linewidth = 0.8)
 
     if label == 'plasma':
         ax.set_xscale('log')
