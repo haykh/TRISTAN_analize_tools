@@ -82,8 +82,8 @@ def plot_spectrum(ax, prtls, stride = 1,
     spec_func = log_interp1d(bns, cnts, kind='cubic')
 
     # using splred/splev
-    spl = interpolate.splrep(bns, cnts, s = 1)
-    cnts_new = interpolate.splev(bns_new, spl)
+    spl = sp.interpolate.splrep(bns, cnts, s = 1)
+    cnts_new = sp.interpolate.splev(bns_new, spl)
 
     # ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
 
