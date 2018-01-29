@@ -14,52 +14,7 @@ plt.register_cmap(name='viridis', cmap=viridis_cmap)
 plt.register_cmap(name='magma', cmap=magma_cmap)
 plt.register_cmap(name='inferno', cmap=inferno_cmap)
 
-# from matplotlib import rc
-#
-# rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
-# rc('text', usetex=True)
-
-global_fontsize = 15
-
-# def plot_dens(ax, x, y,
-#               dens, maximum_dens,
-#               label,
-#               xmin, xmax, ymin, ymax,
-#               cmap, scaling = 'log', power = 1, n_colorbar = 5):
-#     divider = make_axes_locatable(ax)
-#     cax = divider.append_axes("right", size="2%", pad=0.05)
-#     if scaling == 'log':
-#         strm = ax.pcolormesh(x, y, np.log(dens**power + 1.), cmap=cmap, vmin=np.log(1.001), vmax=np.log(maximum_dens**power + 1.001))
-#         cbar = plt.colorbar(strm, cax = cax)
-#         cbar.set_ticks(np.linspace(np.log(1.001), np.log(maximum_dens**power + 1), n_colorbar))
-#         values = map(fmt, np.round(np.exp(np.linspace(np.log(1.001), np.log(maximum_dens + 1.001), n_colorbar)) - 1., 2))
-#     elif scaling == 'lin':
-#         strm = ax.pcolormesh(x, y, dens**power, cmap=cmap, vmin=0, vmax=maximum_dens**power)
-#         cbar = plt.colorbar(strm, cax = cax)
-#         cbar.set_ticks(np.linspace(0, maximum_dens**power, n_colorbar))
-#         values = np.round(np.linspace(0, maximum_dens, n_colorbar), 4)
-#     elif scaling == 'symlin':
-#         strm = ax.pcolormesh(x, y, np.sign(dens) * np.abs(dens)**power, cmap=cmap, vmin=-maximum_dens**power, vmax=maximum_dens**power)
-#         cbar = plt.colorbar(strm, cax = cax)
-#         cbar.set_ticks(np.linspace(-maximum_dens**power, maximum_dens**power, n_colorbar))
-#         values = np.round(np.linspace(-maximum_dens, maximum_dens, n_colorbar), 4)
-#     else:
-#         print ('Only `lin`, `log` & `symlin` scalings supported.')
-#         exit()
-#     cbar.set_ticklabels(values)
-#     cbar.ax.yaxis.set_tick_params(pad=10)
-#     ax.set_xlim(xmin, xmax)
-#     ax.set_ylim(ymin, ymax)
-#     cbar.ax.tick_params(labelsize=global_fontsize)
-#
-#     ax.tick_params(axis='both', labelsize=global_fontsize)
-#     ax.set_aspect(1)
-#     ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=global_fontsize)
-#
-#     props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
-#     ax.text(0.02, 0.95, label, transform=ax.transAxes, fontsize=global_fontsize, verticalalignment='top', bbox=props)
-#
-#     return ax
+global_fontsize = 20
 
 def plot_dens(ax, x, y,
               dens, vmin, vmax,
@@ -107,6 +62,7 @@ def plot_spectrum(ax, prtls, stride = 1,
     cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 300), weights = weights)
     cnts = cnts * stride / np.diff(bns)
     bns = average(bns)
+    cnts *= bns # for: gamma d f(gamma) / d gamma
     # bns = np.power(10, bns)
     ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
 
@@ -122,10 +78,10 @@ def plot_spectrum(ax, prtls, stride = 1,
         ax.set_xlim(min_e, max_e)
         ax.set_ylim(1e0, 1e10)
         ax.set_xlabel(r'$\gamma$', fontsize=global_fontsize)
-        ax.set_ylabel(r'$f(\gamma)$', fontsize=global_fontsize)
+        ax.set_ylabel(r'$\gamma~\mathrm{d}f(\gamma)/\mathrm{d}\gamma$', fontsize=global_fontsize)
 
-        ax.plot([1e2,1e4], [1e9, 1e7], color='purple', ls='--')
-        ax.text(2e3, 5e8, r'$\propto\gamma^{-1}$', fontsize=1.2*global_fontsize)
+        # ax.plot([1e2,1e4], [1e9, 1e7], color='purple', ls='--')
+        # ax.text(2e3, 5e8, r'$\propto\gamma^{-1}$', fontsize=1.2*global_fontsize)
     ax.tick_params(axis='both', labelsize=global_fontsize)
     return ax
 

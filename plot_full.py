@@ -68,7 +68,7 @@ for step in range(start, min(max_number, end), 5):
     x, y = np.meshgrid(x, y)
 
     fig = plt.figure(figsize=(15, 15))
-    global_fontsize = 15
+    global_fontsize = 20
 
     ax00 = plt.subplot2grid((3,6),(0,0),colspan=3)
     ax10 = plt.subplot2grid((3,6),(1,0),colspan=3)
@@ -113,7 +113,7 @@ for step in range(start, min(max_number, end), 5):
     cnt = ax01.contour(x, y, multiplicity, levels = [1.], colors = '#f4b942', linewidths = 1.0)
     cbar01.add_lines(cnt, erase=False)
     cnt.collections[0].set_label('multiplcity = 1')
-    legend = ax01.legend(loc='upper right',fontsize=global_fontsize)
+    legend = ax01.legend(loc='upper right', fontsize=global_fontsize)
     legend.get_frame().set_facecolor('#ffffff')
     legend.get_frame().set_alpha(0.9)
 
