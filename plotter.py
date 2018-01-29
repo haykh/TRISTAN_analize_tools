@@ -76,7 +76,7 @@ def plot_spectrum(ax, prtls, stride = 1,
 
     # using splred/splev
     spl = interpolate.splrep(bns, cnts)
-    cnts_new = splev(bns_new, spl)
+    cnts_new = interpolate.splev(bns_new, spl)
 
     # ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
 
