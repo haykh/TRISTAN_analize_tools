@@ -69,6 +69,8 @@ def plot_spectrum(ax, prtls, stride = 1,
 
     bns = bns[cnts != 0]
     cnts = cnts[cnts != 0]
+    if len(bns) < 5:
+        return ax
     bns_new = np.logspace(np.log10(bns[0]), np.log10(bns[-1]), 1000)
 
     # using splred/splev
