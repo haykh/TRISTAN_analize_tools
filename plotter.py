@@ -3,8 +3,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import copy
-from scipy.interpolate import interp1d
-from scipy import interpolate
+import scipy as sp
+import scipy.interpolate
+
+def log_interp1d(xx, yy, kind='cubic'):
+    logx = np.log10(xx)
+    logy = np.log10(yy)
+    lin_interp = sp.interpolate.interp1d(logx, logy, kind=kind)
+    log_interp = lambda zz: np.power(10.0, lin_interp(np.log10(zz)))
+    return log_interp
 
 from aux_11 import *
 from color_data import plasma_cmap
@@ -72,16 +79,11 @@ def plot_spectrum(ax, prtls, stride = 1,
     bns_new = np.linspace(bns[0], bns[-1], 1000)
 
     # using interp1d
-    spec_func = interp1d(bns, cnts, kind='cubic')
-
-    # using splred/splev
-    spl = interpolate.splrep(bns, cnts)
-    cnts_new = interpolate.splev(bns_new, spl)
+    spec_func = log_interp1d(bns, cnts)
 
     # ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
 
     ax.plot(bns_new, spec_func(bns_new), color = color, ls = ls, label = label, linewidth = 0.8)
-    ax.plot(bns_new, cnts_new, color = color, ls = '--', label = label, linewidth = 0.8)
     ax.plot(bns, cnts, color = color, ls = ':', label = label, linewidth = 0.8)
 
     if label == 'plasma':
