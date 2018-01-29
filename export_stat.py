@@ -49,7 +49,6 @@ def trackEnergy(root, finstep):
         w = data['wp'].value
         ch = data['chp'].value
         phot_en = np.sqrt(u**2 + v**2 + w**2) * ch
-        # phot_en = phot_en[~ np.isnan(phot_en)]
         phot_en = np.sum(phot_en) * stride
 
         npart.append(len(data['up'].value) * stride)
@@ -77,10 +76,11 @@ def trackTimestep(root):
                 total.append(temp)
     return (np.array(laps), np.array(total))
 
-directory = '/u/hhakoby1/outputs/no_merging/'
+name = raw_input('Name of a file: ')
+directory = '/u/hhakoby1/outputs/{}_merging/'.format(name)
 
 mag_e, part_e, phot_e, nph, rl_nph = trackEnergy(directory, 45)
 laps, total = trackTimestep(directory)
 
-np.savetxt('/u/hhakoby1/vis/no_energies.out', (mag_e, part_e, phot_e, nph, rl_nph))
-np.savetxt('/u/hhakoby1/vis/no_timesteps.out', (laps, total))
+np.savetxt('/u/hhakoby1/vis/{}_energies.out'.format(name), (mag_e, part_e, phot_e, nph, rl_nph))
+np.savetxt('/u/hhakoby1/vis/{}_timesteps.out'.format(name), (laps, total))
