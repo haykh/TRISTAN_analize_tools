@@ -59,7 +59,7 @@ def plot_dens(ax, x, y,
 
 def plot_spectrum(ax, prtls, stride = 1,
                   label = None, color = 'black', ls = '-',
-                  weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10):
+                  weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False):
 
     cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 300), weights = weights)
     cnts = cnts * stride / np.diff(bns)
@@ -71,13 +71,15 @@ def plot_spectrum(ax, prtls, stride = 1,
     cnts = cnts[cnts != 0]
     if len(bns) < 5:
         return ax
-    bns_new = np.logspace(np.log10(bns[0]), np.log10(bns[-1]), 1000)
 
-    # using splred/splev
-    spl = sp.interpolate.splrep(np.log10(bns), np.log10(cnts), s=np.log10(cnts).max() / 5.)
-    cnts_new = 10.0**(sp.interpolate.splev(np.log10(bns_new), spl))
-
-    ax.plot(bns_new, cnts_new, color = color, ls = ls, label = label, linewidth = 0.8)
+    if interp:
+        bns_new = np.logspace(np.log10(bns[0]), np.log10(bns[-1]), 1000)
+        # using splred/splev
+        spl = sp.interpolate.splrep(np.log10(bns), np.log10(cnts), s=np.log10(cnts).max() / 5.)
+        cnts_new = 10.0**(sp.interpolate.splev(np.log10(bns_new), spl))
+        ax.plot(bns_new, cnts_new, color = color, ls = ls, label = label, linewidth = 0.8)
+    else:
+        ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
 
     if label == 'plasma':
         ax.set_xscale('log')
