@@ -65,21 +65,19 @@ def plot_spectrum(ax, prtls, stride = 1,
     cnts = cnts * stride / np.diff(bns)
     bns = average(bns)
     cnts *= bns # for: gamma d f(gamma) / d gamma
-    # bns = np.power(10, bns)
 
-    bns = bns[cnts != 0]
-    cnts = cnts[cnts != 0]
-    if len(bns) < 5:
+    if len(bns[cnts != 0]) < 5:
         return ax
 
     if interp:
+        # interpolation
+        cnts += 1
         bns_new = np.logspace(np.log10(bns[0]), np.log10(bns[-1]), 1000)
-        # using splred/splev
-        spl = sp.interpolate.splrep(np.log10(bns), np.log10(cnts), s=np.log10(cnts).max() / 5.)
+        spl = sp.interpolate.splrep(np.log10(bns), np.log10(cnts), s=np.log10(cnts).max() / 10.)
         cnts_new = 10.0**(sp.interpolate.splev(np.log10(bns_new), spl))
         ax.plot(bns_new, cnts_new, color = color, ls = ls, label = label, linewidth = 0.8)
     else:
-        ax.plot(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
+        ax.step(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
 
     if label == 'plasma':
         ax.set_xscale('log')
