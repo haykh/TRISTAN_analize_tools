@@ -42,9 +42,9 @@ for step in tqdm(range(start, min(max_number, end))):
 	y = (np.arange(len(dens)) - max(np.arange(len(dens))) * 0.5) * code_downsampling / skin_depth
 	x,y = np.meshgrid(x,y)
 	xmin = x.min()
-    xmax = x.max()
-    ymin = y.min()
-    ymax = y.max()
+	xmax = x.max()
+	ymin = y.min()
+	ymax = y.max()
 
 	fig, ax = plt.subplots()
 	cbar, ax = plot_dens(ax, x, y,
