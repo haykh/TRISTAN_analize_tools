@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use("agg")
 import h5py
 from matplotlib.mlab import bivariate_normal
 import matplotlib.pyplot as plt
