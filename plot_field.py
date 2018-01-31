@@ -49,10 +49,10 @@ for step in tqdm(range(start, min(max_number, end))):
 	ymax = y.max()
 
 	fig, ax = plt.subplots()
-	cbar, ax = plot_dens(ax, x, y,
-						dens / ppc0, vmin = 1, vmax = 5e3, label = r'plasma $[n_0]$',
-						xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
-						cmap = 'plasma', scaling = 'log', setover = 'red', extend = 'both')
+	ax = plot_dens(ax, x, y,
+					dens / ppc0, vmin = 1, vmax = 5e3, label = r'plasma $[n_0]$',
+					xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+					cmap = 'plasma', scaling = 'log', setover = 'red', extend = 'both')
 
 	plt.tight_layout()
 	plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
