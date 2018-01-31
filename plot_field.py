@@ -55,6 +55,6 @@ for step in tqdm(range(start, min(max_number, end))):
 						cmap = 'plasma', scaling = 'log', setover = 'red', extend = 'both')
 
 	plt.tight_layout()
-	plt.savefig(output_dir + "all_" + str(step+1).zfill(3) + ".png", dpi=100)
+	plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
 
 #plt.show()
