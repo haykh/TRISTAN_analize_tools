@@ -38,7 +38,7 @@ epsph_max = simulation_variables['epsph_max']
 epsph_min = simulation_variables['epsph_min']
 stride = simulation_variables['stride']
 
-start = 60
+start = 1
 end = max_number
 
 for step in tqdm(range(start, min(max_number, end))):
@@ -54,7 +54,7 @@ for step in tqdm(range(start, min(max_number, end))):
 
 	fig, ax = plt.subplots(figsize=(25,5))
 	ax = plot_dens(ax, x, y,
-					dens / ppc0, vmin = 1, vmax = 5e3, label = r'plasma $[n_0]$',
+					dens / ppc0, vmin = 1e-1, vmax = 5e3, label = r'plasma $[n_0]$',
 					xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
 					cmap = 'plasma', scaling = 'log', setover = 'red', extend = 'both')
 
