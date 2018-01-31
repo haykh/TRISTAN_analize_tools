@@ -17,7 +17,7 @@ from color_data import plasma_cmap
 plt.register_cmap(name='plasma', cmap=plasma_cmap)
 from parser import define_variables
 
-root = '../../outputs/test_big/'
+root = '/u/hhakoby1/outputs/test_big/'
 output_dir = root + 'pics/'
 simulation_variables = define_variables(root)
 
