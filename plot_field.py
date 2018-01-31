@@ -21,6 +21,10 @@ root = '/u/hhakoby1/outputs/test_big/'
 output_dir = root + 'pics/'
 simulation_variables = define_variables(root)
 
+import os
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+
 max_number = int(getNumberOfFiles(root))
 
 code_downsampling = simulation_variables['code_downsampling']
