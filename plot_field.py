@@ -52,7 +52,7 @@ for step in tqdm(range(start, min(max_number, end))):
 	ymin = y.min()
 	ymax = y.max()
 
-	fig, ax = plt.subplots()
+	fig, ax = plt.subplots(figsize=(25,5))
 	ax = plot_dens(ax, x, y,
 					dens / ppc0, vmin = 1, vmax = 5e3, label = r'plasma $[n_0]$',
 					xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
