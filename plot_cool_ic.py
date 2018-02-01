@@ -71,7 +71,7 @@ for step in tqdm(range(start, min(max_number, end), 1)):
     x, y = np.meshgrid(x, y)
 
     fig = plt.figure(figsize=(28, 14))
-    global_fontsize = 20
+    global_fontsize = 25
 
     ax1 = plt.subplot2grid((3,4),(0,0),rowspan=3)
     ax2 = plt.subplot2grid((3,4),(0,1),rowspan=3)
