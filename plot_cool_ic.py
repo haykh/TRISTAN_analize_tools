@@ -85,7 +85,7 @@ for step in tqdm(range(start, min(max_number, end), 1)):
     bx = np.rot90(bx)
     by = np.rot90(by)
 
-    ax1.streamplot(x, y, -bx, by, color = (1,1,1,0.5), density = 2, linewidth = 0.5)
+    # ax1.streamplot(x, y, -bx, by, color = (1,1,1,0.5), density = 2, linewidth = 0.5)
 
     divider = make_axes_locatable(ax1)
     cax = divider.append_axes("top", size="2%", pad=0.05)
