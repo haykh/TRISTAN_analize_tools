@@ -131,8 +131,8 @@ for step in tqdm(range(start, min(max_number, end), 1)):
 
     min_e = 0.02
     max_e = 10.
-    min_n = 1e3
-    max_n = 1e8
+    min_n = 1e2
+    max_n = 1e7
     cnts, bns = np.histogram(plasma.g / 10000., bins=np.logspace(np.log10(min_e), np.log10(max_e), 300))
     cnts = cnts * stride
     bns = average(bns)
