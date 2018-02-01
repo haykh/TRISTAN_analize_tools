@@ -70,8 +70,8 @@ for step in tqdm(range(start, min(max_number, end), 1)):
     y = (np.arange(len(dens)) - max(np.arange(len(dens))) * 0.5) * code_downsampling / skin_depth
     x, y = np.meshgrid(x, y)
 
-    fig = plt.figure(figsize=(21, 11))
-    global_fontsize = 15
+    fig = plt.figure(figsize=(28, 14))
+    global_fontsize = 20
 
     ax1 = plt.subplot2grid((3,4),(0,0),rowspan=3)
     ax2 = plt.subplot2grid((3,4),(0,1),rowspan=3)
@@ -106,6 +106,7 @@ for step in tqdm(range(start, min(max_number, end), 1)):
     ax1.set_ylabel(r'$y$, [$c/\omega_{pl}$]', fontsize=global_fontsize)
     props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
     ax1.text(0.05, 0.97, r'plasma $[n_0]$', transform=ax1.transAxes, fontsize=global_fontsize, verticalalignment='top', bbox=props)
+    ax1.set_xticks([-4000,0,4000])
 
     divider = make_axes_locatable(ax2)
     cax = divider.append_axes("top", size="2%", pad=0.05)
