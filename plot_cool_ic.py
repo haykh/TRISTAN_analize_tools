@@ -17,10 +17,10 @@ from plotter import *
 from parser import define_variables
 import helper as hlp
 
-from matplotlib import rc
-
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
-rc('text', usetex=True)
+# from matplotlib import rc
+#
+# rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+# rc('text', usetex=True)
 
 root = '/u/hhakoby1/outputs/cool_ic/'
 output_dir = root + 'pics/'
