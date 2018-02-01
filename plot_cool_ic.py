@@ -134,9 +134,9 @@ for step in tqdm(range(start, min(max_number, end), 1)):
     min_n = 1e3
     max_n = 1e8
     cnts, bns = np.histogram(plasma.g / 10000., bins=np.logspace(np.log10(min_e), np.log10(max_e), 300))
-    cnts = cnts * stride / np.diff(bns)
+    cnts = cnts * stride
     bns = average(bns)
-    cnts *= bns # for: gamma d f(gamma) / d gamma
+    # cnts *= bns # for: gamma d f(gamma) / d gamma
 
     ax3.plot(bns, cnts, color = 'blue', label = 'plasma', linewidth = 0.8)
     ax3.set_xscale('log')
