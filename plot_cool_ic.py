@@ -70,7 +70,7 @@ for step in tqdm(range(start, min(max_number, end), 1)):
     y = (np.arange(len(dens)) - max(np.arange(len(dens))) * 0.5) * code_downsampling / skin_depth
     x, y = np.meshgrid(x, y)
 
-    fig = plt.figure(figsize=(14, 7))
+    fig = plt.figure(figsize=(21, 11))
     global_fontsize = 15
 
     ax1 = plt.subplot2grid((3,4),(0,0),rowspan=3)
