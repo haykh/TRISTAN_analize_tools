@@ -95,7 +95,7 @@ for step in tqdm(range(start, min(max_number, end), 1)):
     my_cmap.set_over('red')
     strm = ax1.pcolormesh(x, y, dens, cmap=my_cmap, norm=mpl.colors.LogNorm(vmin=0.1, vmax=1e3))
     cbar = plt.colorbar(strm, cax = cax, extend='both', orientation='horizontal')
-    cbar.ax.yaxis.set_tick_params(pad=10)
+    cbar.ax.yaxis.set_tick_params(pad=20)
     cbar.ax.xaxis.set_ticks_position('top')
     cbar.ax.tick_params(labelsize=global_fontsize)
     ax1.tick_params(axis='both', labelsize=global_fontsize)
@@ -116,7 +116,7 @@ for step in tqdm(range(start, min(max_number, end), 1)):
     my_cmap.set_over('red')
     strm = ax2.pcolormesh(x, y, np.rot90(np.sqrt(bsquared / np.mean(bsquared[1]))), cmap=my_cmap, norm=mpl.colors.LogNorm(vmin=1e-2, vmax=1e2))
     cbar = plt.colorbar(strm, cax = cax, extend='both', orientation='horizontal')
-    cbar.ax.yaxis.set_tick_params(pad=10)
+    cbar.ax.yaxis.set_tick_params(pad=20)
     cbar.ax.xaxis.set_ticks_position('top')
     cbar.ax.tick_params(labelsize=global_fontsize)
     ax2.tick_params(axis='both', labelsize=global_fontsize)
@@ -127,6 +127,7 @@ for step in tqdm(range(start, min(max_number, end), 1)):
 #     ax2.set_yticks([])
     props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
     ax2.text(0.05, 0.97, r'$B/B_{\rm up}$', transform=ax2.transAxes, fontsize=global_fontsize, verticalalignment='top', bbox=props)
+    ax2.set_xticks([-4000,0,4000])
 
     min_e = 0.02
     max_e = 10.
