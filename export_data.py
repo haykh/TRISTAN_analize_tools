@@ -21,8 +21,7 @@ ppc0 = simulation_variables['ppc0']
 speed_of_light = simulation_variables['speed_of_light']
 stride = simulation_variables['stride']
 
-step
-
+step = 82
 
 plasma = getPlasma(root, step)
 
