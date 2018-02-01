@@ -48,7 +48,7 @@ print "There are overall approx " + str(max_number) + " files."
 
 # %matplotlib notebook
 
-for step in tqdm_notebook(range(start, min(max_number, end), 1)):
+for step in tqdm(range(start, min(max_number, end), 1)):
     dens = getField(root, step, 'dens', getSizes(root, step), ymin = 30, ymax = -30)
     densph = getField(root, step, 'densph', getSizes(root, step), ymin = 30, ymax = -30)
     denbw = getField(root, step, 'denbw', getSizes(root, step), ymin = 30, ymax = -30)
