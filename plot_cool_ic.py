@@ -39,7 +39,7 @@ ppc0 = simulation_variables['ppc0']
 speed_of_light = simulation_variables['speed_of_light']
 stride = simulation_variables['stride']
 
-start = 0
+start = 82
 end = max_number
 
 global_fontsize = 15
