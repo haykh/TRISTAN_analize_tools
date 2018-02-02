@@ -60,7 +60,7 @@ for step in tqdm(range(start, min(max_number, end))):
     ax1 = plt.subplot2grid((3,3),(0,0),colspan=3)
     ax2 = plt.subplot2grid((3,3),(1,0),colspan=3)
     ax3 = plt.subplot2grid((3,3),(2,0),colspan=3)
-    
+
     ax1 = plot_dens(ax1, x, y,
                     dens / ppc0, vmin = 1e-1, vmax = 5e3, label = r'plasma $[n_0]$',
                     xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
@@ -76,6 +76,6 @@ for step in tqdm(range(start, min(max_number, end))):
                     xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                     cmap = 'Vega10',
                     scaling = 'log', setover = 'white', extend = 'both',
-
+    
     plt.tight_layout()
     plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
