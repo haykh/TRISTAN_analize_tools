@@ -76,6 +76,6 @@ for step in tqdm(range(start, min(max_number, end))):
                     xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                     cmap = 'Vega10',
                     scaling = 'log', setover = 'white', extend = 'both',
-    
-    plt.tight_layout()
-    plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
+
+    # plt.tight_layout()
+    # plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
