@@ -38,10 +38,10 @@ epsph_max = simulation_variables['epsph_max']
 epsph_min = simulation_variables['epsph_min']
 stride = simulation_variables['stride']
 
-start = 1
+start = 120
 end = max_number
 
-for step in tqdm(range(start, min(max_number, end), 10)):
+for step in tqdm(range(start, min(max_number, end), 1)):
     dens = getField(root, step, 'dens', getSizes(root, step))
     densph = getField(root, step, 'densph', getSizes(root, step))
     denbw = getField(root, step, 'denbw', getSizes(root, step))
