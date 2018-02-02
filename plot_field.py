@@ -74,8 +74,8 @@ for step in tqdm(range(start, min(max_number, end))):
     ax3 = plot_dens(ax3, x, y,
                     multiplicity, vmin = 1e-1, vmax = 100, label = 'pair-plasma multiplicity',
                     xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
-                    cmap = 'Vega10',
+                    cmap = 'spectral',
                     scaling = 'log', setover = 'white', extend = 'both')
-    
+
     plt.tight_layout()
     plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
