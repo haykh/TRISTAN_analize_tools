@@ -41,7 +41,7 @@ stride = simulation_variables['stride']
 start = 1
 end = max_number
 
-for step in tqdm(range(start, min(max_number, end))):
+for step in tqdm(range(start, min(max_number, end), 10)):
     dens = getField(root, step, 'dens', getSizes(root, step))
     densph = getField(root, step, 'densph', getSizes(root, step))
     denbw = getField(root, step, 'denbw', getSizes(root, step))
@@ -74,7 +74,7 @@ for step in tqdm(range(start, min(max_number, end))):
     ax3 = plot_dens(ax3, x, y,
                     multiplicity, vmin = 1e-1, vmax = 100, label = 'pair-plasma multiplicity',
                     xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
-                    cmap = 'spectral',
+                    cmap = 'Set1',
                     scaling = 'log', setover = 'white', extend = 'both')
 
     plt.tight_layout()
