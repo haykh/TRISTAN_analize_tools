@@ -75,7 +75,7 @@ for step in tqdm(range(start, min(max_number, end))):
                     multiplicity, vmin = 1e-1, vmax = 100, label = 'pair-plasma multiplicity',
                     xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                     cmap = 'Vega10',
-                    scaling = 'log', setover = 'white', extend = 'both',
-
-    # plt.tight_layout()
-    # plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
+                    scaling = 'log', setover = 'white', extend = 'both')
+    
+    plt.tight_layout()
+    plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
