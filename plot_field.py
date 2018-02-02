@@ -43,6 +43,9 @@ end = max_number
 
 for step in tqdm(range(start, min(max_number, end))):
 	dens = getField(root, step, 'dens', getSizes(root, step))
+    densph = getField(root, step, 'densph', getSizes(root, step))
+    denbw = getField(root, step, 'denbw', getSizes(root, step))
+    multiplicity = divideArray(denbw, dens - denbw)
 
 	x = (np.arange(len(dens[0])) - max(np.arange(len(dens[0]))) * 0.5) * code_downsampling / skin_depth
 	y = (np.arange(len(dens)) - max(np.arange(len(dens))) * 0.5) * code_downsampling / skin_depth
@@ -52,11 +55,27 @@ for step in tqdm(range(start, min(max_number, end))):
 	ymin = y.min()
 	ymax = y.max()
 
-	fig, ax = plt.subplots(figsize=(25,5))
-	ax = plot_dens(ax, x, y,
+    fig = plt.figure(figsize=(25,15))
+
+    ax1 = plt.subplot2grid((3,3),(0,0),colspan=3)
+    ax2 = plt.subplot2grid((3,3),(1,0),colspan=3)
+    ax3 = plt.subplot2grid((3,3),(2,0),colspan=3)
+
+	ax1 = plot_dens(ax1, x, y,
 					dens / ppc0, vmin = 1e-1, vmax = 5e3, label = r'plasma $[n_0]$',
 					xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
-					cmap = 'plasma', scaling = 'log', setover = 'red', extend = 'both')
+					cmap = 'plasma',
+                    scaling = 'log', setover = 'red', extend = 'both')
+    ax2 = plot_dens(ax2, x, y,
+                     densph, vmin = 10, vmax = 1e5, label = 'photons',
+                     xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                     cmap = 'afmhot',
+                     scaling = 'log', extend = 'both')
+    ax3 = plot_dens(ax3, x, y,
+                     multiplicity, vmin = 1e-1, vmax = 100, label = 'pair-plasma multiplicity',
+                     xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
+                     cmap = 'Vega10',
+                     scaling = 'log', setover = 'white', extend = 'both',
 
 	plt.tight_layout()
 	plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi = 100)
