@@ -62,7 +62,7 @@ def plot_spectrum(ax, prtls, stride = 1,
                   weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False):
 
     cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 300), weights = weights)
-    cnts *= stride
+    cnts = cnts * stride
     bns = average(bns)
     # g df(g) / dg
 
