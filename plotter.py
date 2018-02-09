@@ -79,19 +79,19 @@ def plot_spectrum(ax, prtls, stride = 1,
     else:
         ax.step(bns, cnts, color = color, ls = ls, label = label, linewidth = 0.8)
 
-    if label == 'plasma':
-        ax.set_xscale('log')
-        ax.set_yscale('log', nonposy='clip')
-        ax.yaxis.tick_left()
-        ax.yaxis.set_label_position("left")
 
-        ax.legend(loc='upper center', ncol=5, fontsize=global_fontsize)
-        ax.ticklabel_format(fontsize=global_fontsize)
+    ax.set_xscale('log')
+    ax.set_yscale('log', nonposy='clip')
+    ax.yaxis.tick_left()
+    ax.yaxis.set_label_position("left")
 
-        ax.set_xlim(min_e, max_e)
-        ax.set_ylim(min_n, max_n)
-        ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=global_fontsize)
-        ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=global_fontsize)
+    ax.legend(loc='upper center', ncol=5, fontsize=global_fontsize)
+    ax.ticklabel_format(fontsize=global_fontsize)
+
+    ax.set_xlim(min_e, max_e)
+    ax.set_ylim(min_n, max_n)
+    ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=global_fontsize)
+    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=global_fontsize)
 
         # ax.plot([1e2,1e4], [1e9, 1e7], color='purple', ls='--')
         # ax.text(2e3, 5e8, r'$\propto\gamma^{-1}$', fontsize=1.2*global_fontsize)
