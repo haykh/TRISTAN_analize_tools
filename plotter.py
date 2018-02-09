@@ -112,7 +112,7 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
 
     cnts = reduce_array(cnts)
 
-    ax.step(bins, cnts, c=color, ls=ls)
+    ax.step(bins, cnts, c=color, ls=ls, label=label)
     ax.set_xscale('log')
     ax.set_yscale('log')
 
