@@ -98,6 +98,37 @@ def plot_spectrum(ax, prtls, stride = 1,
     ax.tick_params(axis='both', labelsize=global_fontsize)
     return ax
 
+def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
+                      label = None, color = 'black', ls = '-',
+                      min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10):
+    def reduce_array(arr):
+        return np.sum(np.reshape(arr, (nprocs, bin_size)), axis=0)
+    def reshape_arr(arr):
+        return np.array([arr[i:i + bin_size] for i in xrange(0, len(arr), bin_size)][0])
+
+    bins = reshape_arr(bins)
+    bins = np.append([1e-1], bins)
+    bins = average(bins)
+
+    cnts = reduce_array(cnts)
+
+    ax.step(bins, cnts, c=color, ls=ls)
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+
+    ax.yaxis.tick_left()
+    ax.yaxis.set_label_position("left")
+
+    ax.legend(loc='upper center', ncol=5, fontsize=global_fontsize)
+    ax.ticklabel_format(fontsize=global_fontsize)
+
+    ax.set_xlim(min_e, max_e)
+    ax.set_ylim(min_n, max_n)
+    ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=global_fontsize)
+    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=global_fontsize)
+    ax.tick_params(axis='both', labelsize=global_fontsize)
+    return ax
+
 def plot_temperature(ax, plasma,
                      xmin, xmax, ymin, ymax,
                      max_g, skin_depth = 10, dwn = 8):
