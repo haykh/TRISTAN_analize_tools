@@ -22,7 +22,8 @@ def plot_dens(ax, x, y,
               dens, vmin, vmax,
               label,
               xmin, xmax, ymin, ymax,
-              cmap, scaling, setover = None, setunder = None, extend = 'neither', ret_cbar = False):
+              cmap, scaling, setover = None, setunder = None, extend = 'neither', ret_cbar = False,
+              fontsize=global_fontsize):
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="2%", pad=0.05)
     my_cmap = copy.copy(mpl.cm.get_cmap(cmap))
@@ -46,12 +47,12 @@ def plot_dens(ax, x, y,
     cbar.ax.yaxis.set_tick_params(pad=10)
     ax.set_xlim(xmin, xmax)
     ax.set_ylim(ymin, ymax)
-    cbar.ax.tick_params(labelsize=global_fontsize)
-    ax.tick_params(axis='both', labelsize=global_fontsize)
+    cbar.ax.tick_params(labelsize=fontsize)
+    ax.tick_params(axis='both', labelsize=fontsize)
     ax.set_aspect(1)
-    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=global_fontsize)
+    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=fontsize)
     props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
-    ax.text(0.02, 0.95, label, transform=ax.transAxes, fontsize=global_fontsize, verticalalignment='top', bbox=props)
+    ax.text(0.02, 0.95, label, transform=ax.transAxes, fontsize=fontsize, verticalalignment='top', bbox=props)
     if ret_cbar:
         return (cbar, ax)
     else:
@@ -59,7 +60,8 @@ def plot_dens(ax, x, y,
 
 def plot_spectrum(ax, prtls, stride = 1,
                   label = None, color = 'black', ls = '-',
-                  weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False):
+                  weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False,
+                  fontsize=global_fontsize):
 
     cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 300), weights = weights)
     cnts = cnts * stride
@@ -85,22 +87,23 @@ def plot_spectrum(ax, prtls, stride = 1,
     ax.yaxis.tick_left()
     ax.yaxis.set_label_position("left")
 
-    ax.legend(loc='upper center', ncol=5, fontsize=global_fontsize)
-    ax.ticklabel_format(fontsize=global_fontsize)
+    ax.legend(loc='upper center', ncol=5, fontsize=fontsize)
+    ax.ticklabel_format(fontsize=fontsize)
 
     ax.set_xlim(min_e, max_e)
     ax.set_ylim(min_n, max_n)
-    ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=global_fontsize)
-    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=global_fontsize)
+    ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=fontsize)
+    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=fontsize)
 
         # ax.plot([1e2,1e4], [1e9, 1e7], color='purple', ls='--')
-        # ax.text(2e3, 5e8, r'$\propto\gamma^{-1}$', fontsize=1.2*global_fontsize)
-    ax.tick_params(axis='both', labelsize=global_fontsize)
+        # ax.text(2e3, 5e8, r'$\propto\gamma^{-1}$', fontsize=1.2*fontsize)
+    ax.tick_params(axis='both', labelsize=fontsize)
     return ax
 
 def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
-                      label = None, color = 'black', ls = '-',
-                      min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10):
+                      label = None, color = 'black', ls = '-', lw = 0.5,
+                      min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10,
+                      fontsize=global_fontsize):
     def reduce_array(arr):
         return np.sum(np.reshape(arr, (nprocs, bin_size)), axis=0)
     def reshape_arr(arr):
@@ -112,26 +115,27 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
 
     cnts = reduce_array(cnts)
 
-    ax.step(bins, cnts, c=color, ls=ls, label=label)
+    ax.step(bins, cnts, c=color, ls=ls, label=label, lw=lw)
     ax.set_xscale('log')
     ax.set_yscale('log')
 
     ax.yaxis.tick_left()
     ax.yaxis.set_label_position("left")
 
-    ax.legend(loc='upper center', ncol=5, fontsize=global_fontsize)
-    ax.ticklabel_format(fontsize=global_fontsize)
+    ax.legend(loc='upper center', ncol=5, fontsize=fontsize)
+    ax.ticklabel_format(fontsize=fontsize)
 
     ax.set_xlim(min_e, max_e)
     ax.set_ylim(min_n, max_n)
-    ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=global_fontsize)
-    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=global_fontsize)
-    ax.tick_params(axis='both', labelsize=global_fontsize)
+    ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=fontsize)
+    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=fontsize)
+    ax.tick_params(axis='both', labelsize=fontsize)
     return ax
 
 def plot_temperature(ax, plasma,
                      xmin, xmax, ymin, ymax,
-                     max_g, skin_depth = 10, dwn = 8):
+                     max_g, skin_depth = 10, dwn = 8,
+                     fontsize=global_fontsize):
     dx = plasma.x.max() - plasma.x.min()
     dy = plasma.y.max() - plasma.y.min()
     cnts1, xed, yed = np.histogram2d(plasma.y, plasma.x, bins=(int(dy / dwn),int(dx / dwn)))
@@ -149,18 +153,19 @@ def plot_temperature(ax, plasma,
     cax = divider.append_axes("right", size="2%", pad=0.05)
     pcol = ax.pcolormesh(x, y, cnts, vmin = 0, vmax = max_g, cmap = 'inferno')
     cbar = plt.colorbar(pcol, cax = cax, extend='max')
-    cbar.ax.tick_params(labelsize=global_fontsize)
+    cbar.ax.tick_params(labelsize=fontsize)
     ax.set_aspect(1)
     ax.set_ylim(ymin, ymax)
     ax.set_xlim(xmin, xmax)
-    ax.tick_params(axis='both', labelsize=global_fontsize)
-    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=global_fontsize)
+    ax.tick_params(axis='both', labelsize=fontsize)
+    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=fontsize)
     props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
-    ax.text(0.02, 0.95, r'Average $\gamma$', transform=ax.transAxes, fontsize=global_fontsize, verticalalignment='top', bbox=props)
+    ax.text(0.02, 0.95, r'Average $\gamma$', transform=ax.transAxes, fontsize=fontsize, verticalalignment='top', bbox=props)
     return ax
 
 def plot_stat(ax, root, step,
-              epsph_min, epsph_max):
+              epsph_min, epsph_max,
+              fontsize=global_fontsize):
     if not os.path.isfile(root + 'stat.tot.' + str(step+1).zfill(3)):
         return ax
     data = h5py.File(root + 'stat.tot.' + str(step+1).zfill(3),'r')
@@ -176,11 +181,11 @@ def plot_stat(ax, root, step,
     p = ax.scatter(E1s, E2s, s=5, c=np.arccos(cosphis)*180/np.pi)
     ax.plot(np.logspace(-4,4,100),1/np.logspace(-4,4,100), c='black', ls='--')
     cbar = plt.colorbar(p, cax = cax)
-    cbar.set_label('relative angle', rotation=90, fontsize=global_fontsize)
-    cbar.ax.tick_params(labelsize=global_fontsize)
-    ax.tick_params(axis='both', labelsize=global_fontsize)
-    ax.set_xlabel(r'$\varepsilon_1$, [$m_ec^2$]', fontsize=global_fontsize)
-    ax.set_ylabel(r'$\varepsilon_2$, [$m_ec^2$]', fontsize=global_fontsize)
+    cbar.set_label('relative angle', rotation=90, fontsize=fontsize)
+    cbar.ax.tick_params(labelsize=fontsize)
+    ax.tick_params(axis='both', labelsize=fontsize)
+    ax.set_xlabel(r'$\varepsilon_1$, [$m_ec^2$]', fontsize=fontsize)
+    ax.set_ylabel(r'$\varepsilon_2$, [$m_ec^2$]', fontsize=fontsize)
     ax.set_yscale('log')
     ax.set_xscale('log')
     ax.set_xlim(epsph_min, epsph_max)
