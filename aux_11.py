@@ -92,6 +92,7 @@ def trackEnergy(root, finstep):
     speed_of_light = simulation_variables['speed_of_light']
     output_period = simulation_variables['output_period']
     stride = simulation_variables['stride']
+    root += 'output/'
 
     m_el = (speed_of_light / skin_depth)**2 * (1. / ppc0)
     magnetic_energy = []
