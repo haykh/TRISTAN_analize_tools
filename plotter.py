@@ -115,9 +115,11 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
 
     cnts = reduce_array(cnts)
 
+    if max(cnts) < min_n:
+        cnts += min_n / 10.
     ax.step(bins, cnts, c=color, ls=ls, label=label, lw=lw)
-    # ax.set_xscale('log')
-    # ax.set_yscale('log')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
 
     ax.yaxis.tick_left()
     ax.yaxis.set_label_position("left")
