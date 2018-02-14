@@ -10,10 +10,12 @@ from aux_11 import *
 from plotter import *
 from parser import define_variables
 
-root = '../../outputs/test_sd3/'
+import sys
+sys.path.append('/u/hhakoby1/vis/tqdm/')
+from tqdm import tqdm
 
+root = '/u/hhakoby1/outputs/production_runs/s3e3_gc150/'
 output_dir = root + 'pics/'
-
 simulation_variables = define_variables(root)
 
 import os
@@ -38,51 +40,36 @@ end = max_number
 
 print "There are overall approx " + str(max_number) + " files."
 
-for step in range(start, min(max_number, end), 5):
-    print step
-    dens = getField(root, step, 'dens', getSizes(root, step))
-    densph = getField(root, step, 'densph', getSizes(root, step))
-    denbw = getField(root, step, 'denbw', getSizes(root, step))
-    dnpair = getField(root, step, 'dnpair', getSizes(root, step))
-    bx = getField(root, step, 'bx', getSizes(root, step))
-    by = getField(root, step, 'by', getSizes(root, step))
-    bz = getField(root, step, 'bz', getSizes(root, step))
-    ex = getField(root, step, 'ex', getSizes(root, step))
-    ey = getField(root, step, 'ey', getSizes(root, step))
-    ez = getField(root, step, 'ez', getSizes(root, step))
-    ecrossb = np.sqrt((ey * bz - ez * by)**2 + (ex * bz - bz * ex)**2 + (ex * by - ey * bx)**2)
+for step in tqdm(range(start, min(max_number, end) + 1, 5)):
+    dens = getField(root, step, 'dens', getSizes(root, step), ymin = 30, ymax = -30)
+    densph = getField(root, step, 'densph', getSizes(root, step), ymin = 30, ymax = -30)
+    denbw = getField(root, step, 'denbw', getSizes(root, step), ymin = 30, ymax = -30)
+    dnpair = getField(root, step, 'dnpair', getSizes(root, step), ymin = 30, ymax = -30)
+    bx = getField(root, step, 'bx', getSizes(root, step), ymin = 30, ymax = -30)
+    by = getField(root, step, 'by', getSizes(root, step), ymin = 30, ymax = -30)
+    bz = getField(root, step, 'bz', getSizes(root, step), ymin = 30, ymax = -30)
     bsquared = bx**2 + by**2 + bz**2
-    ecrossb /= bsquared
     multiplicity = divideArray(denbw, dens - denbw)
-
-    photons = getPhotons(root, step)
-    plasma = getPlasma(root, step)
-    pairs = plasma[plasma.ind < 0]
-    plasma = plasma[plasma.ind > 0]
-
-    yglob_mid = (plasma.y.max() + plasma.y.min()) * 0.5
-    xglob_mid = (plasma.x.max() + plasma.x.min()) * 0.5
 
     x = (np.arange(len(dens[0])) - max(np.arange(len(dens[0]))) * 0.5) * code_downsampling / skin_depth
     y = (np.arange(len(dens)) - max(np.arange(len(dens))) * 0.5) * code_downsampling / skin_depth
     x, y = np.meshgrid(x, y)
 
-    fig = plt.figure(figsize=(15, 15))
-    global_fontsize = 20
+    fig = plt.figure(figsize=(20, 16))
+    global_fontsize = 15
 
-    ax00 = plt.subplot2grid((3,6),(0,0),colspan=3)
-    ax10 = plt.subplot2grid((3,6),(1,0),colspan=3)
-    ax20 = plt.subplot2grid((3,6),(2,0),colspan=3)
-    ax01 = plt.subplot2grid((3,6),(0,3),colspan=3)
-    ax11 = plt.subplot2grid((3,6),(1,3),colspan=3)
-    ax21 = plt.subplot2grid((3,6),(2,3),colspan=3)
+    ax00 = plt.subplot2grid((3,4),(0,0),colspan=2)
+    ax10 = plt.subplot2grid((3,4),(1,0),colspan=2)
+    ax20 = plt.subplot2grid((3,4),(2,0),colspan=2)
+    ax01 = plt.subplot2grid((3,4),(0,2),colspan=2)
+    ax11 = plt.subplot2grid((3,4),(1,2),colspan=2)
+    ax210 = plt.subplot2grid((3,4),(2,2))
+    ax211 = plt.subplot2grid((3,4),(2,3))
 
     xmin = x.min()
     xmax = x.max()
-    ymin = y.min()
-    ymax = y.max()
-    # ymin = -100 / (skin_depth / 10.)
-    # ymax = 100 / (skin_depth / 10.)
+    ymin = -200 / (skin_depth / 10.)
+    ymax = 200 / (skin_depth / 10.)
 
     ax00.streamplot(x, y, by, bx, color = (1,1,1,0.5), density = 0.6, linewidth = 1.2)
 
@@ -93,7 +80,7 @@ for step in range(start, min(max_number, end), 5):
                      scaling = 'log', setover = 'red', extend = 'both', ret_cbar = True)
 
     ax10 = plot_dens(ax10, x, y,
-                     densph, vmin = 10, vmax = 1e5, label = 'photons',
+                     densph, vmin = 10, vmax = 1e7, label = 'photons',
                      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                      cmap = 'afmhot',
                      scaling = 'log', extend = 'both')
@@ -110,38 +97,38 @@ for step in range(start, min(max_number, end), 5):
                      cmap = 'inferno',
                      scaling = 'log', setover = 'red', extend = 'both')
 
-    cnt = ax01.contour(x, y, multiplicity, levels = [1.], colors = '#f4b942', linewidths = 1.0)
-    cbar01.add_lines(cnt, erase=False)
-    cnt.collections[0].set_label('multiplcity = 1')
-    legend = ax01.legend(loc='upper right', fontsize=global_fontsize)
-    legend.get_frame().set_facecolor('#ffffff')
-    legend.get_frame().set_alpha(0.9)
-
     ax11 = plot_dens(ax11, x, y,
-                     dnpair, vmin = 1e-2, vmax = 10, label = r'pairs formed at a given timestep',
+                     dnpair, vmin = 1e-2, vmax = 100, label = r'pairs formed at a given timestep',
                      xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax,
                      cmap = 'plasma',
                      scaling = 'log', setover = 'red', extend = 'both')
 
-    if photons is not None:
-        original = len(photons)
-        if original > 0:
-            if len(photons) > 1e7:
-                photons = photons.sample(1e7)
-            ax21 = plot_spectrum(ax21, photons.e, stride = stride * original / len(photons),
-                                 label='photons', color = 'black',
-                                 weights = photons.ch, max_e = 1e4)
+    data = h5py.File(root + 'spec.tot.{}'.format(str(step).zfill(3)), 'r')
+    bins = data['bn'].value
+    parts = data['npart'].value
+    pairs = data['npair'].value
+    phots = data['nphot'].value
 
-    if len(pairs) > 0:
-        ax21 = plot_spectrum(ax21, pairs.g, stride=stride,
-                             label='pairs', color = (1,0,0,1), max_e = 1e4)
-        ax21 = plot_spectrum(ax21, np.concatenate((plasma.g, pairs.g)),
-                             stride=stride,
-                             label='plasma', color = 'blue', max_e = 1e4)
-    else:
-        ax21 = plot_spectrum(ax21, plasma.g,
-                             stride=stride,
-                             label='plasma', color = 'blue', max_e = 1e4)
+    param = h5py.File(root + 'param.{}'.format(str(step).zfill(3)), 'r')
+    nprocs = param['sizey'].value[0] * param['sizex'].value[0]
+
+    max_e = 1e5
+    min_n = 1e0
+    max_n = 1e10
+    ax211 = plot_spectrum_new(ax211, bins, phots, nprocs,
+                              label = 'photons', color = 'black',
+                              max_e = max_e, min_n = min_n, max_n = max_n)
+
+    min_e = 1
+    max_e = 1e5
+    min_n = 1e0
+    max_n = 1e8
+    ax210 = plot_spectrum_new(ax210, bins, parts, nprocs,
+                              label = 'all plasma', color = 'blue',
+                              min_e = min_e, max_e = max_e, min_n = min_n, max_n = max_n)
+    ax210 = plot_spectrum_new(ax210, bins, pairs, nprocs,
+                              label = 'pairs', color = 'red',
+                              min_e = min_e, max_e = max_e, min_n = min_n, max_n = max_n)
 
     plt.tight_layout()
-    plt.savefig(output_dir + "all_" + str(step+1).zfill(3) + ".png", dpi=150)
+    plt.savefig(output_dir + "all_" + str(step).zfill(3) + ".png", dpi=150)
