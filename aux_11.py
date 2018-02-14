@@ -97,6 +97,7 @@ def trackEnergy(root, finstep):
     m_el = (speed_of_light / skin_depth)**2 * (1. / ppc0)
     magnetic_energy = []
     particle_energy = []
+    pairs_energy = []
     photons_energy = []
     npart = []
     realnpart = []
@@ -113,8 +114,12 @@ def trackEnergy(root, finstep):
         b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_downsampling**2 / (2. * m_el * speed_of_light**2)
 
         # particles
+        parts = getPlasma(root, step)
         data = h5py.File(root + 'prtl.tot.{}'.format(str(step).zfill(3)), 'r')
-        prtl_en = 2. * np.sum(data['gammae'].value - 1.) * stride
+        gammae = (data['gammae'].value)[data['inde'].value > 0]
+        gammae_prs = (data['gammae'].value)[data['inde'].value < 0]
+        prtl_en = 2. * np.sum(gammae - 1.) * stride
+        pair_en = 2. * np.sum(gammae_prs - 1.) * stride
 
         # photons
         data = h5py.File(root + 'phot.tot.{}'.format(str(step).zfill(3)), 'r')
@@ -130,9 +135,11 @@ def trackEnergy(root, finstep):
 
         magnetic_energy.append(b_en)
         particle_energy.append(prtl_en)
+        pairs_energy.append(pair_en)
         photons_energy.append(phot_en)
     return (np.array(magnetic_energy),
             np.array(particle_energy),
+            np.array(pairs_energy),
             np.array(photons_energy),
             np.array(npart),
             np.array(realnpart))
