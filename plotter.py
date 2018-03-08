@@ -124,7 +124,7 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
     ax.yaxis.tick_left()
     ax.yaxis.set_label_position("left")
 
-    ax.legend(loc='upper center', ncol=5, fontsize=fontsize)
+    ax.legend(loc='upper center', ncol=2, fontsize=fontsize)
     ax.ticklabel_format(fontsize=fontsize)
 
     ax.set_xlim(min_e, max_e)

@@ -37,7 +37,7 @@ epsph_max = simulation_variables['epsph_max']
 epsph_min = simulation_variables['epsph_min']
 stride = simulation_variables['stride']
 
-start = 0
+start = 230
 end = max_number
 
 for step in tqdm(range(start, min(max_number, end) + 1, 5)):
