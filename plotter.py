@@ -130,7 +130,7 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
     ax.set_xlim(min_e, max_e)
     ax.set_ylim(min_n, max_n)
     ax.set_xlabel(r'$h\nu$', fontsize=fontsize)
-    ax.set_ylabel(r'$\nu F_{\nu}$', fontsize=fontsize)
+    ax.set_ylabel(r'$F_{\nu}$', fontsize=fontsize)
     ax.tick_params(axis='both', labelsize=fontsize)
     return ax
 
