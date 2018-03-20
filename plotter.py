@@ -63,7 +63,7 @@ def plot_spectrum(ax, prtls, stride = 1,
                   weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False,
                   fontsize=global_fontsize):
 
-    cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 300), weights = weights)
+    cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 150), weights = weights)
     cnts = cnts * stride
     bns = average(bns)
     # g df(g) / dg
@@ -74,7 +74,7 @@ def plot_spectrum(ax, prtls, stride = 1,
     if interp:
         # interpolation
         cnts += 1
-        bns_new = np.logspace(np.log10(bns[0]), np.log10(bns[-1]), 150)
+        bns_new = np.logspace(np.log10(bns[0]), np.log10(bns[-1]), 1000)
         spl = sp.interpolate.splrep(np.log10(bns), np.log10(cnts), s=np.log10(cnts).max() / 10.)
         cnts_new = 10.0**(sp.interpolate.splev(np.log10(bns_new), spl))
         ax.plot(bns_new, cnts_new, color = color, ls = ls, label = label, linewidth = 0.8)
