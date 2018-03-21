@@ -61,12 +61,16 @@ def plot_dens(ax, x, y,
 def plot_spectrum(ax, prtls, stride = 1,
                   label = None, color = 'black', ls = '-',
                   weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False,
-                  fontsize=global_fontsize):
+                  fontsize=global_fontsize, normalize = False):
 
     cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 150), weights = weights)
     cnts = cnts * stride
     bns = average(bns)
     # g df(g) / dg
+
+    if normalize:
+        cnts = np.array(cnts)
+        cnts /= cnts.max()
 
     if len(bns[cnts != 0]) < 5:
         return ax
