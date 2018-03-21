@@ -119,6 +119,10 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
 
     cnts = reduce_array(cnts)
 
+    indices = (bins > min_e) & (bins < max_e)
+    bins = bins[indices]
+    cnts = cnts[indices]
+
     if max(cnts) < min_n:
         cnts += min_n / 10.
     if normalize:
