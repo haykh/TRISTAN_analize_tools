@@ -108,7 +108,6 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
                       label = None, color = 'black', ls = '-', lw = 0.5, ncol = 3,
                       min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10,
                       fontsize=global_fontsize, normalize = False):
-    print ls
     def reduce_array(arr):
         return np.sum(np.reshape(arr, (nprocs, bin_size)), axis=0)
     def reshape_arr(arr):
@@ -128,7 +127,7 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
         cnts += min_n / 10.
     if normalize:
         cnts /= max(cnts)
-    ax.step(bins, cnts, c=color, ls=ls, label=label, lw=lw)
+    ax.plot(bins, cnts, c=color, ls=ls, label=label, lw=lw, drawstyle='steps')
     ax.set_xscale('log')
     ax.set_yscale('log')
 
