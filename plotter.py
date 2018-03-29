@@ -105,7 +105,7 @@ def plot_spectrum(ax, prtls, stride = 1,
     return ax
 
 def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
-                      label = None, color = 'black', ls = '-', lw = 0.5,
+                      label = None, color = 'black', ls = '-', lw = 0.5, ncol = 3,
                       min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10,
                       fontsize=global_fontsize, normalize = False):
     def reduce_array(arr):
@@ -134,13 +134,13 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
     ax.yaxis.tick_left()
     ax.yaxis.set_label_position("left")
 
-    ax.legend(loc='upper center', ncol=5, fontsize=fontsize)
+    ax.legend(loc='upper center', ncol=ncol, fontsize=fontsize)
     ax.ticklabel_format(fontsize=fontsize)
 
     ax.set_xlim(min_e, max_e)
     ax.set_ylim(min_n, max_n)
-    ax.set_xlabel(r'$h\nu$', fontsize=fontsize)
-    ax.set_ylabel(r'$F_{\nu}$', fontsize=fontsize)
+    ax.set_xlabel(r'$\varepsilon$', fontsize=fontsize)
+    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f/\mathrm{d}\varepsilon$', fontsize=fontsize)
     ax.tick_params(axis='both', labelsize=fontsize)
     return ax
 
