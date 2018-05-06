@@ -38,11 +38,11 @@ def plot_dens(ax, x, y,
     else:
         my_cmap.set_over(setover)
     if scaling == 'log':
-        strm = ax.pcolormesh(x, y, dens, cmap=my_cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
+        strm = ax.pcolorfast(x, y, dens, cmap=my_cmap, norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax))
     elif scaling == 'lin':
-        strm = ax.pcolormesh(x, y, dens, cmap=cmap, vmin=vmin, vmax=vmax)
+        strm = ax.pcolorfast(x, y, dens, cmap=cmap, vmin=vmin, vmax=vmax)
     elif scaling == 'symlog':
-        strm = ax.pcolormesh(x, y, dens, cmap=cmap, norm=mpl.colors.SymLogNorm(linthresh=vmax/10., vmin=vmin, vmax=vmax))
+        strm = ax.pcolorfast(x, y, dens, cmap=cmap, norm=mpl.colors.SymLogNorm(linthresh=vmax/10., vmin=vmin, vmax=vmax))
     cbar = plt.colorbar(strm, cax = cax, extend=extend)
     cbar.ax.yaxis.set_tick_params(pad=10)
     ax.set_xlim(xmin, xmax)
@@ -163,7 +163,7 @@ def plot_temperature(ax, plasma,
 
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="2%", pad=0.05)
-    pcol = ax.pcolormesh(x, y, cnts, vmin = 0, vmax = max_g, cmap = 'inferno')
+    pcol = ax.pcolorfast(x, y, cnts, vmin = 0, vmax = max_g, cmap = 'inferno')
     cbar = plt.colorbar(pcol, cax = cax, extend='max')
     cbar.ax.tick_params(labelsize=fontsize)
     ax.set_aspect(1)
