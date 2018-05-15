@@ -58,6 +58,52 @@ def plot_dens(ax, x, y,
     else:
         return ax
 
+def plot_dens_new(ax, x, y,
+                  dens, vmin, vmax,
+                  label,
+                  xmin, xmax, ymin, ymax,
+                  cmap, scaling, setover = None, setunder = None, extend = 'neither', ret_cbar = False,
+                  fontsize=global_fontsize):
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="2%", pad=0.05)
+    my_cmap = copy.copy(mpl.cm.get_cmap(cmap))
+    if setunder is None:
+        my_cmap.set_bad(my_cmap(0))
+        my_cmap.set_under(my_cmap(0))
+    else:
+        my_cmap.set_bad(setunder)
+        my_cmap.set_under(setunder)
+    if setover is None:
+        my_cmap.set_over(my_cmap(255))
+    else:
+        my_cmap.set_over(setover)
+    if scaling == 'log':
+        strm = ax.imshow(dens, cmap=my_cmap,
+                         norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax),
+                         extent=[x.min(), x.max(), y.min(), y.max()])
+    elif scaling == 'lin':
+        strm = ax.imshow(dens, cmap=my_cmap,
+                         vmin=vmin, vmax=vmax,
+                         extent=[x.min(), x.max(), y.min(), y.max()])
+    elif scaling == 'symlog':
+        strm = ax.imshow(dens, cmap=my_cmap,
+                         norm=mpl.colors.SymLogNorm(linthresh=vmax/10., vmin=vmin, vmax=vmax),
+                         extent=[x.min(), x.max(), y.min(), y.max()])
+    cbar = plt.colorbar(strm, cax = cax, extend=extend)
+    cbar.ax.yaxis.set_tick_params(pad=10)
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
+    cbar.ax.tick_params(labelsize=fontsize)
+    ax.tick_params(axis='both', labelsize=fontsize)
+    ax.set_aspect(1)
+    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=fontsize)
+    props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
+    ax.text(0.02, 0.95, label, transform=ax.transAxes, fontsize=fontsize, verticalalignment='top', bbox=props)
+    if ret_cbar:
+        return (cbar, ax)
+    else:
+        return ax
+
 def plot_spectrum(ax, prtls, stride = 1,
                   label = None, color = 'black', ls = '-',
                   weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False,
