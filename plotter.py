@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 import copy
+import matplotlib.ticker as ticker
 import scipy as sp
 import scipy.interpolate
 
@@ -256,7 +257,7 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
     my_cmap = copy.copy(mpl.cm.get_cmap('jet'))
     my_cmap.set_bad(my_cmap(0))
     my_cmap.set_under(my_cmap(0))
-    
+
     b_ax = np.linspace(-3,1,100)
     g_ax = np.linspace(0,4,100)
     cnt = ax.hist2d(np.log10(data['gam']), np.log10(data['B']), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
