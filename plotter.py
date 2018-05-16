@@ -206,6 +206,7 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
     ax.set_xlabel(r'particle $\gamma$')
     ax.set_ylabel(r'$B / B_{\rm up}$');
     ax.set_xlim(np.log10(5),np.log10(1e4))
+    ax.set_ylim(-3,1)
 
     mpl.rcParams['hatch.color'] = (0,0,0,.2)
     xs = np.linspace(-1,4,5)
