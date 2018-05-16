@@ -278,15 +278,15 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
 
     clabs = ax.clabel(clab, fmt=fmt);
 
-    # [txt.set_bbox(dict(facecolor='white', edgecolor='black', pad=6)) for txt in clabs]
-    #
-    # divider = make_axes_locatable(ax)
-    # cax = divider.append_axes("right", size="2%", pad=0.05)
-    # cbar = plt.colorbar(cnt[-1], cax = cax)
-    # cbar.set_label(r'\# of photons')
-    # ax.set_xlabel(r'particle $\gamma$')
-    # ax.set_ylabel(r'$B / B_{\rm up}$');
-    # ax.set_xlim(np.log10(5),np.log10(1e4))
+    [txt.set_bbox(dict(facecolor='white', edgecolor='black', pad=6)) for txt in clabs]
+
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="2%", pad=0.05)
+    cbar = plt.colorbar(cnt[-1], cax = cax)
+    cbar.set_label(r'\# of photons')
+    ax.set_xlabel(r'particle $\gamma$')
+    ax.set_ylabel(r'$B / B_{\rm up}$');
+    ax.set_xlim(np.log10(5),np.log10(1e4))
     #
     # mpl.rcParams['hatch.color'] = (0,0,0,.2)
     # xs = np.linspace(-1,4,5)
