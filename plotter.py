@@ -243,10 +243,8 @@ def plot_e1_vs_e2(ax, root, step):
     ax.set_ylabel(r'$\epsilon_2/m_ec^2$')
     mpl.rcParams['hatch.color'] = (0,0,0,.2)
     ax.fill_between([1e-5,1e-2,1e-2,1e5],[1e5,1e5,1e-2,1e-2], hatch="\\\\", linewidth=0.0, alpha=0.0)
-    txt = ax.text(1, 3e-3, r'photons not tracked here', color='black', horizontalalignment='center', verticalalignment='center')
+    txt = ax.text(1, 3e-3, r'not tracked', color='black', horizontalalignment='center', verticalalignment='center')
     txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'))
     mpl.rcParams['hatch.color'] = (1,0,0,.2)
     ax.fill_between(np.logspace(-10,10,2), 1. / np.logspace(-10,10,2), hatch="//", linewidth=0.0, alpha=0.0)
-    txt = ax.text(.3, .3, "pair production not possible here""\n"r"$\epsilon_1\epsilon_2(1-\cos{\phi})<2m_e c^2$",
-                         color='red', horizontalalignment='center', verticalalignment='center', rotation=-45)
     txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
