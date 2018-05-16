@@ -183,7 +183,7 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
         cnt = ax.hist2d(np.log10(data['gam']), np.log10(data['B']), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
     else:
         print '2'
-        cnt = ax.hist2d([-10], [-10], bins=(g_ax, b_ax), cmap=my_cmap);
+        cnt = ax.hist2d([1], [-2], bins=(g_ax, b_ax), cmap=my_cmap);
         print cnt
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="2%", pad=0.05)
