@@ -250,3 +250,49 @@ def plot_stat(ax, root, step,
     ax.set_ylim(epsph_min, epsph_max)
     ax.set_aspect(1)
     return ax
+
+def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
+    data = h5py.File(root + 'phst.tot.' + str(step).zfill(3), 'r')
+    my_cmap = copy.copy(mpl.cm.get_cmap('jet'))
+    my_cmap.set_bad(my_cmap(0))
+    my_cmap.set_under(my_cmap(0))
+    
+    b_ax = np.linspace(-3,1,100)
+    g_ax = np.linspace(0,4,100)
+    cnt = ax.hist2d(np.log10(data['gam']), np.log10(data['B']), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
+    g_ax, b_ax = np.meshgrid(g_ax, b_ax)
+    epsph = (10**(g_ax) / gamma_c)**2 * 10**(b_ax) * np.sqrt(sigma / 1000.)
+    levs = np.logspace(-2, 3, 6)
+    clab = ax.contour(g_ax, b_ax, epsph, levels=levs, norm=mpl.colors.LogNorm(), colors='black');
+
+    g_ticks = [0, 1, 2, 3, 4]
+    ax.set_xticks(g_ticks)
+    ax.set_xticklabels([r'$10^{{{0}}}$'.format(str(pow)) for pow in g_ticks])
+    b_ticks = [-3, -2, -1, 0, 1]
+    ax.set_yticks(b_ticks)
+    ax.set_yticklabels([r'$10^{{{0}}}$'.format(str(pow)) for pow in b_ticks])
+
+    fmt = ticker.LogFormatterMathtext()
+    fmt.create_dummy_axis()
+
+    clabs = ax.clabel(clab, fmt=fmt);
+
+    # [txt.set_bbox(dict(facecolor='white', edgecolor='black', pad=6)) for txt in clabs]
+    #
+    # divider = make_axes_locatable(ax)
+    # cax = divider.append_axes("right", size="2%", pad=0.05)
+    # cbar = plt.colorbar(cnt[-1], cax = cax)
+    # cbar.set_label(r'\# of photons')
+    # ax.set_xlabel(r'particle $\gamma$')
+    # ax.set_ylabel(r'$B / B_{\rm up}$');
+    # ax.set_xlim(np.log10(5),np.log10(1e4))
+    #
+    # mpl.rcParams['hatch.color'] = (0,0,0,.2)
+    # xs = np.linspace(-1,4,5)
+    # ys = np.log10(1e-2 * (1e3 / sigma)**0.5 * (gamma_c / 10**xs)**2)
+    # ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=1.0, color='white')
+    # ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=0.0)
+    #
+    # txt = ax.text(1.3, -1.8, "photons not tracked here", size=15,
+    #                      color='black', horizontalalignment='center', verticalalignment='center', rotation=-45)
+    # txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
