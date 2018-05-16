@@ -199,13 +199,12 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
     ax.set_xlabel(r'particle $\gamma$')
     ax.set_ylabel(r'$B / B_{\rm up}$');
     ax.set_xlim(np.log10(5),np.log10(1e4))
-    #
-    # mpl.rcParams['hatch.color'] = (0,0,0,.2)
-    # xs = np.linspace(-1,4,5)
-    # ys = np.log10(1e-2 * (1e3 / sigma)**0.5 * (gamma_c / 10**xs)**2)
-    # ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=1.0, color='white')
-    # ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=0.0)
-    #
-    # txt = ax.text(1.3, -1.8, "photons not tracked here", size=15,
-    #                      color='black', horizontalalignment='center', verticalalignment='center', rotation=-45)
-    # txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
+
+    mpl.rcParams['hatch.color'] = (0,0,0,.2)
+    xs = np.linspace(-1,4,5)
+    ys = np.log10(1e-2 * (1e3 / sigma)**0.5 * (gamma_c / 10**xs)**2)
+    ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=1.0, color='white')
+    ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=0.0)
+    txt = ax.text(1.3, -1.8, "not tracked",
+                         color='black', horizontalalignment='center', verticalalignment='center', rotation=-45)
+    txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
