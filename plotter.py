@@ -178,7 +178,6 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
 
     b_ax = np.linspace(-3,1,100)
     g_ax = np.linspace(0,4,100)
-    print len(data['gam'].value)
     if len(data['gam'].value) > 10000:
         cnt = ax.hist2d(np.log10(data['gam']), np.log10(data['B']), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
     else:
