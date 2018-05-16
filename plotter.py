@@ -180,12 +180,12 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
     g_ax = np.linspace(0,4,100)
     if len(data['gam'].value) > 100:
         cnt = ax.hist2d(np.log10(data['gam']), np.log10(data['B']), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="2%", pad=0.05)
+        cbar = plt.colorbar(cnt[-1], cax = cax)
+        cbar.set_label(r'\# of photons')
     else:
         cnt = ax.hist2d([6], [6], bins=(g_ax, b_ax), cmap=my_cmap);
-    divider = make_axes_locatable(ax)
-    cax = divider.append_axes("right", size="2%", pad=0.05)
-    cbar = plt.colorbar(cnt[-1], cax = cax)
-    cbar.set_label(r'\# of photons')
 
     g_ax, b_ax = np.meshgrid(g_ax, b_ax)
     epsph = (10**(g_ax) / gamma_c)**2 * 10**(b_ax) * np.sqrt(sigma / 1000.)
