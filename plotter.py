@@ -8,6 +8,7 @@ import matplotlib.ticker as ticker
 import scipy as sp
 import scipy.interpolate
 from matplotlib.ticker import NullFormatter
+import os
 
 from aux_11 import *
 from color_data import plasma_cmap
@@ -167,7 +168,10 @@ def plot_stat(ax, root, step,
     return ax
 
 def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
-    data = h5py.File(root + 'phst.tot.' + str(step).zfill(3), 'r')
+    fname = root + 'phst.tot.' + str(step).zfill(3)
+    if not os.path.isfile(fname):
+        return ax
+    data = h5py.File(fname, 'r')
     my_cmap = copy.copy(mpl.cm.get_cmap('jet'))
     my_cmap.set_bad(my_cmap(0))
     my_cmap.set_under(my_cmap(0))
@@ -213,13 +217,18 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
 
 def plot_e1_vs_e2(ax, root, step):
     nullfmt = NullFormatter()
-    data = h5py.File(root + 'prst.tot.' + str(step).zfill(3), 'r')
+    fname = root + 'prst.tot.' + str(step).zfill(3)
+    if not os.path.isfile(fname):
+        return ax
+    data = h5py.File(fname, 'r')
     E1s = data['E1'].value
     E2s = data['E2'].value
     cosphis = data['cosph'].value
     E2s = E2s[(E1s != -2) & (E1s != 0)]
     cosphis = cosphis[(E1s != -2) & (E1s != 0)]
     E1s = E1s[(E1s != -2) & (E1s != 0)]
+    if len(E1s) < 100000:
+        return ax
     indices = np.random.choice(np.arange(len(E1s)), 100000)
     E1s = E1s[indices]
     E2s = E2s[indices]
