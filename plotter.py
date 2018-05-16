@@ -230,20 +230,26 @@ def plot_e1_vs_e2(ax, root, step):
     nullfmt = NullFormatter()
     fname = root + 'prst.tot.' + str(step).zfill(3)
     if not os.path.isfile(fname):
-        return ax
-    data = h5py.File(fname, 'r')
-    E1s = data['E1'].value
-    E2s = data['E2'].value
-    cosphis = data['cosph'].value
-    E2s = E2s[(E1s != -2) & (E1s != 0)]
-    cosphis = cosphis[(E1s != -2) & (E1s != 0)]
-    E1s = E1s[(E1s != -2) & (E1s != 0)]
-    if len(E1s) < 100000:
-        return ax
+        E1s = np.array([1e10])
+        E2s = np.array([1e10])
+        cosphis = np.array([1])
+    else:
+        data = h5py.File(fname, 'r')
+        E1s = data['E1'].value
+        E2s = data['E2'].value
+        cosphis = data['cosph'].value
+        E2s = E2s[(E1s != -2) & (E1s != 0)]
+        cosphis = cosphis[(E1s != -2) & (E1s != 0)]
+        E1s = E1s[(E1s != -2) & (E1s != 0)]
+    if len(E1s) < 1e4:
+        E1s = np.array([1e10])
+        E2s = np.array([1e10])
+        cosphis = np.array([1])
     indices = np.random.choice(np.arange(len(E1s)), 100000)
     E1s = E1s[indices]
     E2s = E2s[indices]
     cosphis = cosphis[indices]
+
     scat = ax.scatter(E1s, E2s, s=1, c=np.arccos(cosphis)*180/np.pi, edgecolor='none')
     ax.plot(np.logspace(-10,10,5), 1. / np.logspace(-10,10,5), c='red', ls='--')
     ax.plot(np.logspace(-2,10,5), [1e-2] * 5, c='black', ls='--')
