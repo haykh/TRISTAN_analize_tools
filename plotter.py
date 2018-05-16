@@ -2,10 +2,12 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import copy
 import matplotlib.ticker as ticker
 import scipy as sp
 import scipy.interpolate
+from matplotlib.ticker import NullFormatter
 
 from aux_11 import *
 from color_data import plasma_cmap
@@ -207,4 +209,44 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
     ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=0.0)
     txt = ax.text(1.3, -1.8, "not tracked",
                          color='black', horizontalalignment='center', verticalalignment='center', rotation=-45)
+    txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
+
+def plot_e1_vs_e2(ax, root, step):
+    nullfmt = NullFormatter()
+    data = h5py.File(root + 'prst.tot.' + str(step).zfill(3), 'r')
+    E1s = data['E1'].value
+    E2s = data['E2'].value
+    cosphis = data['cosph'].value
+    E2s = E2s[(E1s != -2) & (E1s != 0)]
+    cosphis = cosphis[(E1s != -2) & (E1s != 0)]
+    E1s = E1s[(E1s != -2) & (E1s != 0)]
+    # indices = np.random.choice(np.arange(len(E1s)), 100000)
+    # E1s = E1s[indices]
+    # E2s = E2s[indices]
+    # cosphis = cosphis[indices]
+    scat = ax.scatter(E1s, E2s, s=1, c=np.arccos(cosphis)*180/np.pi, edgecolor='none')
+    ax.plot(np.logspace(-10,10,5), 1. / np.logspace(-10,10,5), c='red', ls='--')
+    ax.plot(np.logspace(-2,10,5), [1e-2] * 5, c='black', ls='--')
+    ax.plot([1e-2] * 5, np.logspace(-2,10,5), c='black', ls='--')
+    cbaxes = inset_axes(ax, width="30%", height="3%", loc=1, borderpad=2)
+    cbar = plt.colorbar(scat, cax=cbaxes, ticks=np.linspace(5, 178, 3), orientation='horizontal')
+    cbar.ax.set_xticks([5, 91.5, 178])
+    cbar.ax.set_xticklabels(['0', '90', '180'])
+    cbaxes.xaxis.set_ticks_position('bottom')
+    cbar.set_label(r'relative angle $\phi$')
+    cbaxes.xaxis.set_label_position('top')
+    ax.set_yscale('log', nonposy='clip')
+    ax.set_xscale('log', nonposx='clip')
+    ax.set_xlim((1e-3, 1e4))
+    ax.set_ylim((1e-3, 1e4))
+    ax.set_xlabel(r'$\epsilon_1/m_ec^2$')
+    ax.set_ylabel(r'$\epsilon_2/m_ec^2$')
+    mpl.rcParams['hatch.color'] = (0,0,0,.2)
+    ax.fill_between([1e-5,1e-2,1e-2,1e5],[1e5,1e5,1e-2,1e-2], hatch="\\\\", linewidth=0.0, alpha=0.0)
+    txt = ax.text(1, 3e-3, r'photons not tracked here', color='black', horizontalalignment='center', verticalalignment='center')
+    txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'))
+    mpl.rcParams['hatch.color'] = (1,0,0,.2)
+    ax.fill_between(np.logspace(-10,10,2), 1. / np.logspace(-10,10,2), hatch="//", linewidth=0.0, alpha=0.0)
+    txt = ax.text(.3, .3, "pair production not possible here""\n"r"$\epsilon_1\epsilon_2(1-\cos{\phi})<2m_e c^2$",
+                         color='red', horizontalalignment='center', verticalalignment='center', rotation=-45)
     txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
