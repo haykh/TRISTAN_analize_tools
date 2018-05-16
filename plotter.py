@@ -176,12 +176,14 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
     my_cmap.set_bad(my_cmap(0))
     my_cmap.set_under(my_cmap(0))
 
-    if len(data['gam'].value) < 1000:
-        return ax
-        
     b_ax = np.linspace(-3,1,100)
     g_ax = np.linspace(0,4,100)
-    cnt = ax.hist2d(np.log10(data['gam']), np.log10(data['B']), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
+    if len(data['gam'].value) > 1000:
+        cnt = ax.hist2d(np.log10(data['gam']), np.log10(data['B']), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="2%", pad=0.05)
+        cbar = plt.colorbar(cnt[-1], cax = cax)
+        cbar.set_label(r'\# of photons')
     g_ax, b_ax = np.meshgrid(g_ax, b_ax)
     epsph = (10**(g_ax) / gamma_c)**2 * 10**(b_ax) * np.sqrt(sigma / 1000.)
     levs = np.logspace(-2, 3, 6)
@@ -201,10 +203,6 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
 
     [txt.set_bbox(dict(facecolor='white', edgecolor='black', pad=6)) for txt in clabs]
 
-    divider = make_axes_locatable(ax)
-    cax = divider.append_axes("right", size="2%", pad=0.05)
-    cbar = plt.colorbar(cnt[-1], cax = cax)
-    cbar.set_label(r'\# of photons')
     ax.set_xlabel(r'particle $\gamma$')
     ax.set_ylabel(r'$B / B_{\rm up}$');
     ax.set_xlim(np.log10(5),np.log10(1e4))
