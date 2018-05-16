@@ -170,18 +170,24 @@ def plot_stat(ax, root, step,
 def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
     fname = root + 'phst.tot.' + str(step).zfill(3)
     if not os.path.isfile(fname):
-        return ax
-    data = h5py.File(fname, 'r')
+        data_gams = np.array([1e1])
+        data_Bs = np.array([1e-3])
+    else:
+        data = h5py.File(fname, 'r')
+        data_gams = data['gam'].value
+        data_Bs = data['B'].value
     my_cmap = copy.copy(mpl.cm.get_cmap('jet'))
     my_cmap.set_bad(my_cmap(0))
     my_cmap.set_under(my_cmap(0))
 
     b_ax = np.linspace(-3,1,100)
     g_ax = np.linspace(0,4,100)
-    if len(data['gam'].value) > 10000:
-        cnt = ax.hist2d(np.log10(data['gam']), np.log10(data['B']), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
+    if len(data_gams) > 10000:
+        cnt = ax.hist2d(np.log10(data_gams), np.log10(data_Bs), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(), cmap=my_cmap);
     else:
-        cnt = ax.hist2d([1], [-2], bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(vmin=1, vmax=1e5), cmap=my_cmap);
+        data_gams = np.array([1e1])
+        data_Bs = np.array([1e-3])
+        cnt = ax.hist2d(np.log10(data_gams), np.log10(data_Bs), bins=(g_ax, b_ax), norm=mpl.colors.LogNorm(vmin=1, vmax=1e5), cmap=my_cmap);
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="2%", pad=0.05)
     cbar = plt.colorbar(cnt[-1], cax = cax)
