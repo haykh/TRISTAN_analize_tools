@@ -220,10 +220,10 @@ def plot_e1_vs_e2(ax, root, step):
     E2s = E2s[(E1s != -2) & (E1s != 0)]
     cosphis = cosphis[(E1s != -2) & (E1s != 0)]
     E1s = E1s[(E1s != -2) & (E1s != 0)]
-    # indices = np.random.choice(np.arange(len(E1s)), 100000)
-    # E1s = E1s[indices]
-    # E2s = E2s[indices]
-    # cosphis = cosphis[indices]
+    indices = np.random.choice(np.arange(len(E1s)), 100000)
+    E1s = E1s[indices]
+    E2s = E2s[indices]
+    cosphis = cosphis[indices]
     scat = ax.scatter(E1s, E2s, s=1, c=np.arccos(cosphis)*180/np.pi, edgecolor='none')
     ax.plot(np.logspace(-10,10,5), 1. / np.logspace(-10,10,5), c='red', ls='--')
     ax.plot(np.logspace(-2,10,5), [1e-2] * 5, c='black', ls='--')
