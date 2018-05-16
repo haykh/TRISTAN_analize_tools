@@ -184,9 +184,7 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
         cax = divider.append_axes("right", size="2%", pad=0.05)
         cbar = plt.colorbar(cnt[-1], cax = cax)
         cbar.set_label(r'\# of photons')
-    else:
-        cnt = ax.hist2d([6], [6], bins=(g_ax, b_ax), cmap=my_cmap);
-
+    
     g_ax, b_ax = np.meshgrid(g_ax, b_ax)
     epsph = (10**(g_ax) / gamma_c)**2 * 10**(b_ax) * np.sqrt(sigma / 1000.)
     levs = np.logspace(-2, 3, 6)
