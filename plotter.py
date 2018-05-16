@@ -23,8 +23,7 @@ def plot_dens(ax, x, y,
               dens, vmin, vmax,
               label,
               xmin, xmax, ymin, ymax,
-              cmap, scaling, setover = None, setunder = None, extend = 'neither', ret_cbar = False,
-              fontsize=global_fontsize):
+              cmap, scaling, setover = None, setunder = None, extend = 'neither', ret_cbar = False):
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="2%", pad=0.05)
     my_cmap = copy.copy(mpl.cm.get_cmap(cmap))
@@ -48,12 +47,12 @@ def plot_dens(ax, x, y,
     cbar.ax.yaxis.set_tick_params(pad=10)
     ax.set_xlim(xmin, xmax)
     ax.set_ylim(ymin, ymax)
-    cbar.ax.tick_params(labelsize=fontsize)
-    ax.tick_params(axis='both', labelsize=fontsize)
+    # cbar.ax.tick_params(labelsize=fontsize)
+    ax.tick_params(axis='both')
     ax.set_aspect(1)
-    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=fontsize)
+    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]')
     props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
-    ax.text(0.02, 0.95, label, transform=ax.transAxes, fontsize=fontsize, verticalalignment='top', bbox=props)
+    ax.text(0.02, 0.95, label, transform=ax.transAxes, verticalalignment='top', bbox=props)
     if ret_cbar:
         return (cbar, ax)
     else:
