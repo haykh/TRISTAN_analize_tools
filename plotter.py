@@ -62,8 +62,7 @@ def plot_dens_new(ax, x, y,
                   dens, vmin, vmax,
                   label,
                   xmin, xmax, ymin, ymax,
-                  cmap, scaling, setover = None, setunder = None, extend = 'neither', ret_cbar = False,
-                  fontsize=global_fontsize):
+                  cmap, scaling, setover = None, setunder = None, extend = 'neither', ret_cbar = False):
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="2%", pad=0.05)
     my_cmap = copy.copy(mpl.cm.get_cmap(cmap))
@@ -93,12 +92,12 @@ def plot_dens_new(ax, x, y,
     cbar.ax.yaxis.set_tick_params(pad=10)
     ax.set_xlim(xmin, xmax)
     ax.set_ylim(ymin, ymax)
-    cbar.ax.tick_params(labelsize=fontsize)
-    ax.tick_params(axis='both', labelsize=fontsize)
+    # cbar.ax.tick_params(labelsize=fontsize)
+    ax.tick_params(axis='both')
     ax.set_aspect(1)
-    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]', fontsize=fontsize)
+    ax.set_ylabel(r'$x$, [$c/\omega_{pl}$]')
     props = dict(boxstyle='square', facecolor='white', alpha=0.9, edgecolor='none')
-    ax.text(0.02, 0.95, label, transform=ax.transAxes, fontsize=fontsize, verticalalignment='top', bbox=props)
+    ax.text(0.02, 0.95, label, transform=ax.transAxes, verticalalignment='top', bbox=props)
     if ret_cbar:
         return (cbar, ax)
     else:
@@ -106,8 +105,7 @@ def plot_dens_new(ax, x, y,
 
 def plot_spectrum(ax, prtls, stride = 1,
                   label = None, color = 'black', ls = '-',
-                  weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False,
-                  fontsize=global_fontsize, normalize = False):
+                  weights = None, min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, interp = False, normalize = False):
 
     cnts, bns = np.histogram(prtls, bins=np.logspace(np.log10(min_e), np.log10(max_e), 150), weights = weights)
     cnts = cnts * stride
@@ -137,23 +135,22 @@ def plot_spectrum(ax, prtls, stride = 1,
     ax.yaxis.tick_left()
     ax.yaxis.set_label_position("left")
 
-    ax.legend(loc='upper center', ncol=5, fontsize=fontsize)
-    ax.ticklabel_format(fontsize=fontsize)
+    ax.legend(loc='upper center', ncol=5)
+    # ax.ticklabel_format(fontsize=fontsize)
 
     ax.set_xlim(min_e, max_e)
     ax.set_ylim(min_n, max_n)
-    ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$', fontsize=fontsize)
-    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$', fontsize=fontsize)
+    ax.set_xlabel(r'$\varepsilon$, $[m_e c^2]$')
+    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f(\varepsilon)/\mathrm{d}\varepsilon$')
 
         # ax.plot([1e2,1e4], [1e9, 1e7], color='purple', ls='--')
         # ax.text(2e3, 5e8, r'$\propto\gamma^{-1}$', fontsize=1.2*fontsize)
-    ax.tick_params(axis='both', labelsize=fontsize)
+    ax.tick_params(axis='both')
     return ax
 
 def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
                       label = None, color = 'black', ls = '-', lw = 0.5, ncol = 3,
-                      min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10,
-                      fontsize=global_fontsize, normalize = False):
+                      min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, normalize = False):
     def reduce_array(arr):
         return np.sum(np.reshape(arr, (nprocs, bin_size)), axis=0)
     def reshape_arr(arr):
@@ -180,14 +177,14 @@ def plot_spectrum_new(ax, bins, cnts, nprocs, bin_size = 151,
     ax.yaxis.tick_left()
     ax.yaxis.set_label_position("left")
 
-    ax.legend(loc='upper center', ncol=ncol, fontsize=fontsize)
-    ax.ticklabel_format(fontsize=fontsize)
+    ax.legend(loc='upper center', ncol=ncol)
+    # ax.ticklabel_format(fontsize=fontsize)
 
     ax.set_xlim(min_e, max_e)
     ax.set_ylim(min_n, max_n)
-    ax.set_xlabel(r'$\varepsilon$', fontsize=fontsize)
-    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f/\mathrm{d}\varepsilon$', fontsize=fontsize)
-    ax.tick_params(axis='both', labelsize=fontsize)
+    ax.set_xlabel(r'$\varepsilon$')
+    ax.set_ylabel(r'$\varepsilon~\mathrm{d}f/\mathrm{d}\varepsilon$')
+    ax.tick_params(axis='both')
     return ax
 
 def plot_temperature(ax, plasma,
