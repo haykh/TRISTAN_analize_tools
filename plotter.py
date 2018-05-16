@@ -20,8 +20,6 @@ plt.register_cmap(name='viridis', cmap=viridis_cmap)
 plt.register_cmap(name='magma', cmap=magma_cmap)
 plt.register_cmap(name='inferno', cmap=inferno_cmap)
 
-global_fontsize = 15
-
 def plot_dens(ax, x, y,
                   dens, vmin, vmax,
                   label,
@@ -108,8 +106,7 @@ def plot_spectrum(ax, bins, cnts, nprocs, bin_size = 151,
 
 def plot_temperature(ax, plasma,
                      xmin, xmax, ymin, ymax,
-                     max_g, skin_depth = 10, dwn = 8,
-                     fontsize=global_fontsize):
+                     max_g, skin_depth = 10, dwn = 8):
     dx = plasma.x.max() - plasma.x.min()
     dy = plasma.y.max() - plasma.y.min()
     cnts1, xed, yed = np.histogram2d(plasma.y, plasma.x, bins=(int(dy / dwn),int(dx / dwn)))
@@ -138,8 +135,7 @@ def plot_temperature(ax, plasma,
     return ax
 
 def plot_stat(ax, root, step,
-              epsph_min, epsph_max,
-              fontsize=global_fontsize):
+              epsph_min, epsph_max):
     if not os.path.isfile(root + 'stat.tot.' + str(step+1).zfill(3)):
         return ax
     data = h5py.File(root + 'stat.tot.' + str(step+1).zfill(3),'r')
