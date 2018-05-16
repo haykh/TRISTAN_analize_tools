@@ -260,7 +260,7 @@ def plot_e1_vs_e2(ax, root, step):
     cbar.ax.set_xticklabels(['0', '90', '180'])
     cbaxes.xaxis.set_ticks_position('bottom')
     cbar.set_label(r'$\phi$')
-    cbaxes.xaxis.set_label_position('left')
+    cbaxes.xaxis.set_label_position('top')
     ax.set_yscale('log', nonposy='clip')
     ax.set_xscale('log', nonposx='clip')
     ax.set_xlim((1e-3, 1e4))
