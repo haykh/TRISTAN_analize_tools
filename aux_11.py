@@ -170,13 +170,21 @@ def track_energy(root, step):
     root += 'output/'
 
     # B-field
-    data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)), 'r')
-    bx = data['bx'].value
-    by = data['by'].value
-    bz = data['bz'].value
-    ex = data['ex'].value
-    ey = data['ey'].value
-    ez = data['ez'].value
+    bx = getField(root, step, 'bx', getSizes(root, step), ymin = 0, ymax = -1)
+    by = getField(root, step, 'by', getSizes(root, step), ymin = 0, ymax = -1)
+    bz = getField(root, step, 'bz', getSizes(root, step), ymin = 0, ymax = -1)
+    ex = getField(root, step, 'ex', getSizes(root, step), ymin = 0, ymax = -1)
+    ey = getField(root, step, 'ey', getSizes(root, step), ymin = 0, ymax = -1)
+    ez = getField(root, step, 'ez', getSizes(root, step), ymin = 0, ymax = -1)
+    x = (np.arange(len(bx[0])) - max(np.arange(len(bx[0]))) * 0.5) * code_downsampling / skin_depth
+    y = (np.arange(len(bx)) - max(np.arange(len(bx))) * 0.5) * code_downsampling / skin_depth
+    x, y = np.meshgrid(x, y)
+    bx = np.where(np.abs(y)<500, bx, 0)
+    by = np.where(np.abs(y)<500, by, 0)
+    bz = np.where(np.abs(y)<500, bz, 0)
+    ex = np.where(np.abs(y)<500, ex, 0)
+    ey = np.where(np.abs(y)<500, ey, 0)
+    ez = np.where(np.abs(y)<500, ez, 0)
     b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_downsampling**2 / (2. * m_el * speed_of_light**2)
 
     # particles
@@ -184,8 +192,8 @@ def track_energy(root, step):
     prtls = getPlasma(root, step)
     prs = prtls[prtls.ind < 0]
     prtls = prtls[prtls.ind > 0]
-    prtl_en = np.sum(prtls.g - 1.) * stride
-    prs_en = np.sum(prs.g - 1.) * stride
+    prtl_en = np.sum(prtls.g) * stride
+    prs_en = np.sum(prs.g) * stride
 
     # photons
     import os.path
