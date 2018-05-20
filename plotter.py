@@ -273,12 +273,13 @@ def plot_e1_vs_e2(ax, root, step):
 
 def plot_energies(ax, root, stride, step_min=0, step_max=1):
     data = get_energies_vs_time(root, step_min, step_max)
+    data = np.array(data)
     colors = ['#c1493c', '#426cce', '#51dbb1', '#dbd259']
     ax.plot([], [], color = colors[0], label = 'B-field')
     ax.plot([], [], color = colors[1], label = 'initial plasma')
     ax.plot([], [], color = colors[2], label = 'secondary pairs')
     ax.plot([], [], color = colors[3], label = 'photons')
-    ax.stackplot(data[:,0]*500, data[:,1], data[:,2], data[:,3], data[:,4], colors=colors)
+    ax.stackplot(data[:,0,0]*500, data[:,0,1], data[:,0,2], data[:,0,3], data[:,0,4], colors=colors)
     leg = ax.legend(loc='lower left')
     leg.get_frame().set_facecolor('#FFFFFF')
     leg.get_frame().set_linewidth(0)

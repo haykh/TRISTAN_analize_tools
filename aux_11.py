@@ -180,12 +180,12 @@ def track_energy(root, step):
     b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_downsampling**2 / (2. * m_el * speed_of_light**2)
 
     # particles
-    data = h5py.File(root + 'prtl.tot.{}'.format(str(step).zfill(3)), 'r')
+    # data = h5py.File(root + 'prtl.tot.{}'.format(str(step).zfill(3)), 'r')
     prtls = getPlasma(root, step)
     prs = prtls[prtls.ind < 0]
     prtls = prtls[prtls.ind > 0]
     prtl_en = np.sum(prtls.g - 1.) * stride
-    prs_en = np.sum(prtls.g - 1.) * stride
+    prs_en = np.sum(prs.g - 1.) * stride
 
     # photons
     import os.path
