@@ -271,7 +271,7 @@ def plot_e1_vs_e2(ax, root, step):
     ax.fill_between(np.logspace(-10,10,2), 1. / np.logspace(-10,10,2), hatch="//", linewidth=0.0, alpha=0.0)
     txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
 
-def plot_energies(ax, stride, data):
+def plot_energies(ax, stride, data, step):
     colors = ['#c1493c', '#426cce', '#51dbb1', '#dbd259']
     ax.plot([], [], color = colors[0], label = 'B-field')
     ax.plot([], [], color = colors[1], label = 'initial plasma')
@@ -282,3 +282,7 @@ def plot_energies(ax, stride, data):
     leg.get_frame().set_facecolor('#FFFFFF')
     leg.get_frame().set_linewidth(0)
     leg.get_frame().set_alpha(1)
+    ax.set_xlim(0, np.max(data[:,0]*500))
+    ax.set_xlabel(r'$t$')
+    ax.set_ylabel(r'energy budgets')
+    ax.axvline(step*500, c='blue', ls='--', lw=0.6)
