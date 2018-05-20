@@ -168,8 +168,8 @@ def track_energy(root, step, x_lim=200):
 
     root += 'output/'
     sim_vals = h5py.File(root + 'param.000','r')
-    mx0 = sim_vals['mx0']
-    my0 = sim_vals['my0']
+    mx0 = sim_vals['mx0'].value[0]
+    my0 = sim_vals['my0'].value[0]
 
     def x_to_sd(x):
         return (x - mx0 * 0.5) / skin_depth
