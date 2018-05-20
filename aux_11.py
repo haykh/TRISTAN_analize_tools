@@ -221,11 +221,15 @@ def track_energy(root, step, x_lim=200):
             prtl_en, prs_en,
             phot_en)
 
-def get_energies_vs_time(root, x_lim, step_min=0, step_max=1):
+def get_energies_vs_time(root, x_lim, norm=True, step_min=0, step_max=1):
     data = []
     for step in tqdm(range(step_min, step_max + 1)):
         b_en, prtl_en, prs_en, phot_en = track_energy(root, step, x_lim)
-        data.append([[step, b_en, prtl_en, prs_en, phot_en]])
+        if norm:
+            tot_en = b_en + prtl_en + prs_en + phot_en
+        else:
+            tot_en = 1
+        data.append([step, b_en/tot_en, prtl_en/tot_en, prs_en/tot_en, phot_en/tot_en])
     return np.array(data)
 
 # def determineMaxDensity(root, start, end, fld):

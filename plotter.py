@@ -277,7 +277,7 @@ def plot_energies(ax, stride, data):
     ax.plot([], [], color = colors[1], label = 'initial plasma')
     ax.plot([], [], color = colors[2], label = 'secondary pairs')
     ax.plot([], [], color = colors[3], label = 'photons')
-    ax.stackplot(data[:,0,0]*500, data[:,0,1], data[:,0,2], data[:,0,3], data[:,0,4], colors=colors)
+    ax.stackplot(data[:,0]*500, data[:,1], data[:,2], data[:,3], data[:,4], colors=colors)
     leg = ax.legend(loc='lower left')
     leg.get_frame().set_facecolor('#FFFFFF')
     leg.get_frame().set_linewidth(0)
