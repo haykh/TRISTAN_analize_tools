@@ -221,10 +221,10 @@ def track_energy(root, step, x_lim=200):
             prtl_en, prs_en,
             phot_en)
 
-def get_energies_vs_time(root, step_min=0, step_max=1):
+def get_energies_vs_time(root, x_lim, step_min=0, step_max=1):
     data = []
     for step in tqdm(range(step_min, step_max + 1)):
-        b_en, prtl_en, prs_en, phot_en = track_energy(root, step)
+        b_en, prtl_en, prs_en, phot_en = track_energy(root, step, x_lim)
         data.append([[step, b_en, prtl_en, prs_en, phot_en]])
     return np.array(data)
 
