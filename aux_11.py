@@ -157,6 +157,54 @@ def trackTimestep(root):
                 total.append(temp)
     return (np.array(laps), np.array(total))
 
+def track_energy(root, step):
+    simulation_variables = define_variables(root)
+    code_downsampling = simulation_variables['code_downsampling']
+    skin_depth = simulation_variables['skin_depth']
+    ppc0 = simulation_variables['ppc0']
+    speed_of_light = simulation_variables['speed_of_light']
+    output_period = simulation_variables['output_period']
+    stride = simulation_variables['stride']
+
+    m_el = (speed_of_light / skin_depth)**2 * (1. / ppc0)
+
+    # B-field
+    data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)), 'r')
+    bx = data['bx'].value
+    by = data['by'].value
+    bz = data['bz'].value
+    ex = data['ex'].value
+    ey = data['ey'].value
+    ez = data['ez'].value
+    b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_downsampling**2 / (2. * m_el * speed_of_light**2)
+
+    # particles
+    data = h5py.File(root + 'prtl.tot.{}'.format(str(step).zfill(3)), 'r')
+    prtls = getPlasma(root, step)
+    prs = prlts[prlts.ind < 0]
+    prtls = prlts[prlts.ind > 0]
+    prtl_en = np.sum(prtls.g - 1.) * stride
+    prs_en = np.sum(prtls.g - 1.) * stride
+
+    # photons
+    data = h5py.File(root + 'phot.tot.{}'.format(str(step).zfill(3)), 'r')
+    u = data['up'].value
+    v = data['vp'].value
+    w = data['wp'].value
+    ch = data['chp'].value
+    phot_en = np.sum(np.sqrt(u**2 + v**2 + w**2) * ch) * stride
+
+    return (b_en,
+            prtl_en, prs_en,
+            phot_en)
+
+def get_energies_vs_time(root, step_min=0, step_max):
+    data = []
+    for step in range(step_min, step_max + 1):
+        b_en, prtl_en, prs_en, phot_en = track_energy(root, step)
+        data.append([[step, b_en, prtl_en, prs_en, phot_en]])
+    return data
+
 # def determineMaxDensity(root, start, end, fld):
 #     maximum = 0
 #     sizes = getSizes(root, start)
