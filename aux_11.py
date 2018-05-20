@@ -198,7 +198,7 @@ def track_energy(root, step):
             prtl_en, prs_en,
             phot_en)
 
-def get_energies_vs_time(root, step_min=0, step_max):
+def get_energies_vs_time(root, step_min=0, step_max=1):
     data = []
     for step in range(step_min, step_max + 1):
         b_en, prtl_en, prs_en, phot_en = track_energy(root, step)
