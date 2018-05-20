@@ -157,7 +157,7 @@ def trackTimestep(root):
                 total.append(temp)
     return (np.array(laps), np.array(total))
 
-def track_energy(root, step):
+def track_energy(root, step, x_lim=200):
     simulation_variables = define_variables(root)
     code_downsampling = simulation_variables['code_downsampling']
     skin_depth = simulation_variables['skin_depth']
@@ -165,6 +165,15 @@ def track_energy(root, step):
     speed_of_light = simulation_variables['speed_of_light']
     output_period = simulation_variables['output_period']
     stride = simulation_variables['stride']
+
+    sim_vals = h5py.File(root + 'param.000','r')
+    mx0 = sim_vals['mx0']
+    my0 = sim_vals['my0']
+
+    def x_to_sd(x):
+        return (x - mx0 * 0.5) / skin_depth
+    def y_to_sd(y):
+        return (y - my0 * 0.5) / skin_depth
 
     m_el = (speed_of_light / skin_depth)**2 * (1. / ppc0)
     root += 'output/'
@@ -179,17 +188,18 @@ def track_energy(root, step):
     x = (np.arange(len(bx[0])) - max(np.arange(len(bx[0]))) * 0.5) * code_downsampling / skin_depth
     y = (np.arange(len(bx)) - max(np.arange(len(bx))) * 0.5) * code_downsampling / skin_depth
     x, y = np.meshgrid(x, y)
-    bx = np.where(np.abs(y)<500, bx, 0)
-    by = np.where(np.abs(y)<500, by, 0)
-    bz = np.where(np.abs(y)<500, bz, 0)
-    ex = np.where(np.abs(y)<500, ex, 0)
-    ey = np.where(np.abs(y)<500, ey, 0)
-    ez = np.where(np.abs(y)<500, ez, 0)
+    bx = np.where(np.abs(y)<x_lim, bx, 0)
+    by = np.where(np.abs(y)<x_lim, by, 0)
+    bz = np.where(np.abs(y)<x_lim, bz, 0)
+    ex = np.where(np.abs(y)<x_lim, ex, 0)
+    ey = np.where(np.abs(y)<x_lim, ey, 0)
+    ez = np.where(np.abs(y)<x_lim, ez, 0)
     b_en = np.sum(bx**2 + by**2 + bz**2 + ex**2 + ey**3 + ez**2) * code_downsampling**2 / (2. * m_el * speed_of_light**2)
 
     # particles
     # data = h5py.File(root + 'prtl.tot.{}'.format(str(step).zfill(3)), 'r')
     prtls = getPlasma(root, step)
+    prtls = prtls[x_to_sd(prtls.x) < x_lim]
     prs = prtls[prtls.ind < 0]
     prtls = prtls[prtls.ind > 0]
     prtl_en = np.sum(prtls.g) * stride
