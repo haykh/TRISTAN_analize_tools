@@ -167,6 +167,7 @@ def track_energy(root, step):
     stride = simulation_variables['stride']
 
     m_el = (speed_of_light / skin_depth)**2 * (1. / ppc0)
+    root += 'output/'
 
     # B-field
     data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)), 'r')
