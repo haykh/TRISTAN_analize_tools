@@ -166,6 +166,7 @@ def track_energy(root, step, x_lim=200):
     output_period = simulation_variables['output_period']
     stride = simulation_variables['stride']
 
+    root += 'output/'
     sim_vals = h5py.File(root + 'param.000','r')
     mx0 = sim_vals['mx0']
     my0 = sim_vals['my0']
@@ -176,7 +177,6 @@ def track_energy(root, step, x_lim=200):
         return (y - my0 * 0.5) / skin_depth
 
     m_el = (speed_of_light / skin_depth)**2 * (1. / ppc0)
-    root += 'output/'
 
     # B-field
     bx = getField(root, step, 'bx', getSizes(root, step), ymin = 0, ymax = -1)
