@@ -188,12 +188,16 @@ def track_energy(root, step):
     prs_en = np.sum(prtls.g - 1.) * stride
 
     # photons
-    data = h5py.File(root + 'phot.tot.{}'.format(str(step).zfill(3)), 'r')
-    u = data['up'].value
-    v = data['vp'].value
-    w = data['wp'].value
-    ch = data['chp'].value
-    phot_en = np.sum(np.sqrt(u**2 + v**2 + w**2) * ch) * stride
+    import os.path
+    if os.path.isfile(root + 'phot.tot.{}'.format(str(step).zfill(3))):
+        data = h5py.File(root + 'phot.tot.{}'.format(str(step).zfill(3)), 'r')
+        u = data['up'].value
+        v = data['vp'].value
+        w = data['wp'].value
+        ch = data['chp'].value
+        phot_en = np.sum(np.sqrt(u**2 + v**2 + w**2) * ch) * stride
+    else:
+        phot_en = 0
 
     return (b_en,
             prtl_en, prs_en,
