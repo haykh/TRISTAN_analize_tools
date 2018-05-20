@@ -285,4 +285,4 @@ def plot_energies(ax, stride, data, step):
     ax.set_xlim(0, np.max(data[:,0]*500))
     ax.set_xlabel(r'$t$')
     ax.set_ylabel(r'energy budgets')
-    ax.axvline(step*500, c='blue', ls='--', lw=0.6)
+    ax.axvline(step*500, c='blue', ls='--')
