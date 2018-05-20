@@ -4,7 +4,7 @@ import os, os.path
 import pandas as pd
 from aux_11 import *
 from parser import define_variables
-
+from tqdm import tqdm
 
 def getPlasma(root, i):
     data2 = h5py.File(root + 'prtl.tot.' + str(i).zfill(3),'r')
@@ -205,7 +205,7 @@ def track_energy(root, step):
 
 def get_energies_vs_time(root, step_min=0, step_max=1):
     data = []
-    for step in range(step_min, step_max + 1):
+    for step in tqdm(range(step_min, step_max + 1)):
         b_en, prtl_en, prs_en, phot_en = track_energy(root, step)
         data.append([[step, b_en, prtl_en, prs_en, phot_en]])
     return data
