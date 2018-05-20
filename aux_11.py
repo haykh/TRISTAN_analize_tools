@@ -182,8 +182,8 @@ def track_energy(root, step):
     # particles
     data = h5py.File(root + 'prtl.tot.{}'.format(str(step).zfill(3)), 'r')
     prtls = getPlasma(root, step)
-    prs = prlts[prlts.ind < 0]
-    prtls = prlts[prlts.ind > 0]
+    prs = prtls[prtls.ind < 0]
+    prtls = prtls[prtls.ind > 0]
     prtl_en = np.sum(prtls.g - 1.) * stride
     prs_en = np.sum(prtls.g - 1.) * stride
 
