@@ -67,7 +67,7 @@ def plot_dens(ax, x, y,
 
 def plot_spectrum(ax, bins, cnts, nprocs, bin_size = 151,
                       label = None, color = 'black', ls = '-', lw = 0.5, ncol = 3,
-                      min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, normalize = False):
+                      min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, normalize = False, return_data = False):
     def reduce_array(arr):
         return np.sum(np.reshape(arr, (nprocs, bin_size)), axis=0)
     def reshape_arr(arr):
@@ -102,7 +102,10 @@ def plot_spectrum(ax, bins, cnts, nprocs, bin_size = 151,
     ax.set_xlabel(r'$\varepsilon$')
     ax.set_ylabel(r'$\varepsilon~\mathrm{d}f/\mathrm{d}\varepsilon$')
     ax.tick_params(axis='both')
-    return ax
+    if return_data:
+        return (ax, bins, cnts)
+    else:
+        return ax
 
 def plot_temperature(ax, plasma,
                      xmin, xmax, ymin, ymax,
