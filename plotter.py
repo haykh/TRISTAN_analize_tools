@@ -65,6 +65,17 @@ def plot_dens(ax, x, y,
     else:
         return ax
 
+def rainbow_fill(ax,X,Y,cmap='jet'):
+    def rect(x,y,w,h,c):
+        polygon = plt.Rectangle((x,y),w,h,color=c)
+        ax.add_patch(polygon)
+    dxs = (X[1:]-X[:-1])
+    N  = float(X.size)
+    for n,(x,y,dx) in enumerate(zip(X,Y,dxs)):
+        color = plt.get_cmap(cmap)(n/N)
+        rect(x-dx,0,dx,y,color)
+    return ax
+
 def plot_spectrum(ax, bins, cnts, nprocs, bin_size = 151,
                       label = None, color = 'black', ls = '-', lw = 0.5, ncol = 3,
                       min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, normalize = False, return_data = False):
