@@ -237,7 +237,7 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
                          color='black', horizontalalignment='center', verticalalignment='center', rotation=-45)
     txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
 
-def plot_e1_vs_e2(ax, root, step):
+def plot_e1_vs_e2(ax, root, step, emin = 0.01):
     nullfmt = NullFormatter()
     fname = root + 'prst.tot.' + str(step).zfill(3)
     if not os.path.isfile(fname):
@@ -263,8 +263,10 @@ def plot_e1_vs_e2(ax, root, step):
 
     scat = ax.scatter(E1s, E2s, s=1, c=np.arccos(cosphis)*180/np.pi, edgecolor='none')
     ax.plot(np.logspace(-10,10,5), 1. / np.logspace(-10,10,5), c='red', ls='--')
-    ax.plot(np.logspace(-2,10,5), [1e-2] * 5, c='black', ls='--')
-    ax.plot([1e-2] * 5, np.logspace(-2,10,5), c='black', ls='--')
+    ax.axvline(emin, c='black', ls='--')
+    ax.axhline(emin, c='black', ls='--')
+    # ax.plot(np.logspace(-2,10,5), [1e-2] * 5, c='black', ls='--')
+    # ax.plot([1e-2] * 5, np.logspace(-2,10,5), c='black', ls='--')
     cbaxes = inset_axes(ax, width="30%", height="3%", loc=1, borderpad=2)
     cbar = plt.colorbar(scat, cax=cbaxes, ticks=np.linspace(5, 178, 3), orientation='horizontal')
     cbar.ax.set_xticks([5, 91.5, 178])
