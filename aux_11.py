@@ -71,10 +71,7 @@ def getNumberOfFiles(directory):
 
 
 def average(array):
-	newarr = array[:-1]
-	for i in range(len(array) - 1):
-		newarr[i] = 0.5 * (array[i] + array[i + 1])
-	return newarr
+	return (array[1:] + array[:-1]) * 0.5
 
 def divideArray( a, b ):
     """ ignore / 0, div0( [-1, 0, 1], 0 ) -> [0, 0, 0] """
