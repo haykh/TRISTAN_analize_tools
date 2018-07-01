@@ -69,7 +69,7 @@ def rainbow_fill(ax,X,Y,cmap='jet', alpha=1.):
     def rect(x,y,w,h,c):
         polygon = plt.Rectangle((x,y),w,h,color=(c[0], c[1], c[2], alpha))
         ax.add_patch(polygon)
-    dxs = (X[1:]-X[:-1])
+    dxs = (X[1:]-X[:-1]) * 0.5
     N  = float(X.size)
     for n,(x,y,dx) in enumerate(zip(X,Y,dxs)):
         color = plt.get_cmap(cmap)(n/N)
