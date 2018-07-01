@@ -69,9 +69,13 @@ def getNumberOfFiles(directory):
         x += sum(['flds' in fn for fn in files])
     return x
 
-
-def average(array):
+def average_array(array):
 	return (array[1:] + array[:-1]) * 0.5
+def reduce_array(arr, nprocs, bin_size):
+    return np.sum(np.reshape(arr, (nprocs, bin_size)), axis=0)
+def reshape_array(arr, bin_size):
+    return np.array([arr[i:i + bin_size] for i in xrange(0, len(arr), bin_size)][0])
+
 
 def divideArray( a, b ):
     """ ignore / 0, div0( [-1, 0, 1], 0 ) -> [0, 0, 0] """

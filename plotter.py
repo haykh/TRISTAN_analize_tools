@@ -80,16 +80,12 @@ def rainbow_fill(ax,X,Y,cmap='jet', alpha=1.):
 def plot_spectrum(ax, bins, cnts, nprocs, bin_size = 151,
                       label = None, color = 'black', ls = '-', lw = 0.5, ncol = 3,
                       min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, normalize = False, return_data = False):
-    def reduce_array(arr):
-        return np.sum(np.reshape(arr, (nprocs, bin_size)), axis=0)
-    def reshape_arr(arr):
-        return np.array([arr[i:i + bin_size] for i in xrange(0, len(arr), bin_size)][0])
 
-    bins = reshape_arr(bins)
+    bins = reshape_array(bins, bin_size)
     bins = np.append([1e-1], bins)
-    bins = average(bins)
+    bins = average_array(bins)
 
-    cnts = reduce_array(cnts)
+    cnts = reduce_array(cnts, nprocs, bin_size)
 
     indices = (bins > min_e) & (bins < max_e)
     bins = bins[indices]
