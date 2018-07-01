@@ -65,8 +65,9 @@ def plot_dens(ax, x, y,
     else:
         return ax
 
-def rainbow_fill(ax,X,Y,cmap='jet'):
+def rainbow_fill(ax,X,Y,cmap='jet', alpha=1.):
     def rect(x,y,w,h,c):
+        c[-1] = alpha
         polygon = plt.Rectangle((x,y),w,h,color=c)
         ax.add_patch(polygon)
     dxs = (X[1:]-X[:-1])
