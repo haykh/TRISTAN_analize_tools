@@ -174,7 +174,7 @@ def plot_stat(ax, root, step,
     ax.set_aspect(1)
     return ax
 
-def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
+def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c, emin=1e-2):
     fname = root + 'phst.tot.' + str(step).zfill(3)
     if not os.path.isfile(fname):
         data_gams = np.array([1e1])
@@ -202,7 +202,7 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
 
     g_ax, b_ax = np.meshgrid(g_ax, b_ax)
     epsph = (10**(g_ax) / gamma_c)**2 * 10**(b_ax) * np.sqrt(sigma / 1000.)
-    levs = np.logspace(-2, 3, 6)
+    levs = np.logspace(np.log10(emin), 3, 6)
     clab = ax.contour(g_ax, b_ax, epsph, levels=levs, norm=mpl.colors.LogNorm(), colors='black');
 
     g_ticks = [0, 1, 2, 3, 4]
@@ -226,7 +226,7 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c):
 
     mpl.rcParams['hatch.color'] = (0,0,0,.2)
     xs = np.linspace(-1,4,5)
-    ys = np.log10(1e-2 * (1e3 / sigma)**0.5 * (gamma_c / 10**xs)**2)
+    ys = np.log10(emin * (1e3 / sigma)**0.5 * (gamma_c / 10**xs)**2)
     ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=1.0, color='white')
     ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=0.0)
     txt = ax.text(1.3, -1.8, "not tracked",
@@ -276,13 +276,13 @@ def plot_e1_vs_e2(ax, root, step, emin = 0.01):
     ax.set_ylim((1e-3, 1e4))
     ax.set_xlabel(r'$\epsilon_1/m_ec^2$')
     ax.set_ylabel(r'$\epsilon_2/m_ec^2$')
-    mpl.rcParams['hatch.color'] = (0,0,0,.2)
-    ax.fill_between([1e-5,emin,emin,1e5],[1e5,1e5,emin,emin], hatch="\\\\", linewidth=0.0, alpha=0.0)
-    txt = ax.text(1, emin / 3.333, r'not tracked', color='black', horizontalalignment='center', verticalalignment='center')
-    txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'))
+    if emin > 1e-3:
+        mpl.rcParams['hatch.color'] = (0,0,0,.2)
+        ax.fill_between([1e-5,emin,emin,1e5],[1e5,1e5,emin,emin], hatch="\\\\", linewidth=0.0, alpha=0.0)
+        txt = ax.text(1, emin / 3.333, r'not tracked', color='black', horizontalalignment='center', verticalalignment='center')
+        txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'))
     mpl.rcParams['hatch.color'] = (1,0,0,.2)
     ax.fill_between(np.logspace(-10,10,2), 1. / np.logspace(-10,10,2), hatch="//", linewidth=0.0, alpha=0.0)
-    txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
 
 def plot_energies(ax, stride, data, step):
     colors = ['#c1493c', '#426cce', '#51dbb1', '#dbd259']
