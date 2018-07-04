@@ -202,7 +202,7 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c, emin=1e-2):
 
     g_ax, b_ax = np.meshgrid(g_ax, b_ax)
     epsph = (10**(g_ax) / gamma_c)**2 * 10**(b_ax) * np.sqrt(sigma / 1000.)
-    levs = np.logspace(np.log10(emin), 3, 6)
+    levs = np.logspace(np.log10(emin), 3, (3-np.log10(emin)) + 1)
     clab = ax.contour(g_ax, b_ax, epsph, levels=levs, norm=mpl.colors.LogNorm(), colors='black');
 
     g_ticks = [0, 1, 2, 3, 4]
@@ -229,9 +229,9 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c, emin=1e-2):
     ys = np.log10(emin * (1e3 / sigma)**0.5 * (gamma_c / 10**xs)**2)
     ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=1.0, color='white')
     ax.fill_between(xs, -5, ys, hatch="//", linewidth=0.0, alpha=0.0)
-    txt = ax.text(1.3, -1.8, "not tracked",
-                         color='black', horizontalalignment='center', verticalalignment='center', rotation=-45)
-    txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
+    # txt = ax.text(1.3, -1.8, "not tracked",
+    #                      color='black', horizontalalignment='center', verticalalignment='center', rotation=-45)
+    # txt.set_bbox(dict(facecolor='white', alpha=1, edgecolor='none'));
 
 def plot_e1_vs_e2(ax, root, step, emin = 0.01):
     nullfmt = NullFormatter()
@@ -259,8 +259,6 @@ def plot_e1_vs_e2(ax, root, step, emin = 0.01):
 
     scat = ax.scatter(E1s, E2s, s=1, c=np.arccos(cosphis)*180/np.pi, edgecolor='none')
     ax.plot(np.logspace(-10,10,5), 1. / np.logspace(-10,10,5), c='red', ls='--')
-    ax.axvline(emin, c='black', ls='--')
-    ax.axhline(emin, c='black', ls='--')
     # ax.plot(np.logspace(-2,10,5), [1e-2] * 5, c='black', ls='--')
     # ax.plot([1e-2] * 5, np.logspace(-2,10,5), c='black', ls='--')
     cbaxes = inset_axes(ax, width="30%", height="3%", loc=1, borderpad=2)
@@ -277,6 +275,8 @@ def plot_e1_vs_e2(ax, root, step, emin = 0.01):
     ax.set_xlabel(r'$\epsilon_1/m_ec^2$')
     ax.set_ylabel(r'$\epsilon_2/m_ec^2$')
     if emin > 1e-3:
+        ax.axvline(emin, c='black', ls='--')
+        ax.axhline(emin, c='black', ls='--')
         mpl.rcParams['hatch.color'] = (0,0,0,.2)
         ax.fill_between([1e-5,emin,emin,1e5],[1e5,1e5,emin,emin], hatch="\\\\", linewidth=0.0, alpha=0.0)
         txt = ax.text(1, emin / 3.333, r'not tracked', color='black', horizontalalignment='center', verticalalignment='center')
