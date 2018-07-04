@@ -204,6 +204,8 @@ def plot_photonB_vs_gamma(ax, root, step, sigma, gamma_c, emin=1e-2):
     epsph = (10**(g_ax) / gamma_c)**2 * 10**(b_ax) * np.sqrt(sigma / 1000.)
     levs = np.logspace(np.log10(emin), 3, (3-np.log10(emin)) + 1)
     clab = ax.contour(g_ax, b_ax, epsph, levels=levs, norm=mpl.colors.LogNorm(), colors='black');
+    if len(levs > 5):
+        clab = ax.contour(g_ax, b_ax, epsph, levels=levs[0::2], norm=mpl.colors.LogNorm(), colors='black');
 
     g_ticks = [0, 1, 2, 3, 4]
     ax.set_xticks(g_ticks)
