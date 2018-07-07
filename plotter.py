@@ -82,8 +82,8 @@ def plot_spectrum(ax, bins, cnts, nprocs, bin_size = 151,
                       min_e = 1e-1, max_e = 1e3, min_n = 1e0, max_n = 1e10, normalize = False, return_data = False):
 
     bins = reshape_array(bins, bin_size)
-    bins = np.append([1e-1], bins)
-    bins = average_array(bins)
+    bins = np.append([1e-1], bins)[:-1]
+    # bins = average_array(bins)
 
     cnts = reduce_array(cnts, nprocs, bin_size)
 
