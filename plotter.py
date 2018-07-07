@@ -95,7 +95,7 @@ def plot_spectrum(ax, bins, cnts, nprocs, bin_size = 151,
         cnts += min_n / 10.
     if normalize:
         cnts /= max(cnts)
-    ax.plot(bins, cnts, c=color, ls=ls, label=label, lw=lw, drawstyle='steps')
+    ax.plot(bins, cnts, c=color, ls=ls, label=label, lw=lw)
     ax.set_xscale('log')
     ax.set_yscale('log')
 
