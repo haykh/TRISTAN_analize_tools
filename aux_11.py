@@ -103,7 +103,7 @@ def trackEnergy(root, finstep):
     npart = []
     realnpart = []
     for step in range(0, finstep):
-        print int(100. * step / finstep), '%'
+        print ((int)(100. * step / finstep), '%')
         # B-field
         data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)), 'r')
         bx = data['bx'].value
@@ -152,9 +152,9 @@ def trackTimestep(root):
     with open(filename, 'r') as f:
         for line in f:
             if 'lap ' in line:
-                laps.append(float(re.findall("\d+", line)[0]))
+                laps.append((float)(re.findall("\d+", line)[0]))
             if 'Total, sec' in line:
-                temp = float(re.findall("\d\.\d\d..\d\d", line)[0])
+                temp = (float)(re.findall("\d\.\d\d..\d\d", line)[0])
                 total.append(temp)
     return (np.array(laps), np.array(total))
 
