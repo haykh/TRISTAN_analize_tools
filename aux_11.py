@@ -234,7 +234,7 @@ def get_energies_vs_time(root, x_lim, norm=True, step_min=0, step_max=1):
     return np.array(data)
 
 
-def getAverageSpec(root, step, bin_size = 151, get_new_parts = False):
+def getSpectrum(root, step, bin_size = 151, get_new_parts = False):
     parts_ = np.zeros(bin_size)
     phots_ = np.zeros(bin_size)
     new_parts_ = np.zeros(bin_size)
