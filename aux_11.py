@@ -249,7 +249,7 @@ def getSpectrum(root, step, bin_size = 151, get_new_parts = False):
         parts = pairs
     phots = data['ninst'].value
     bins = bins[:bin_size-1]
-    bins = np.append(bins.min(), bins)
+    bins = np.append(10**np.floor(np.log10(bins.min())), bins)
     parts = reduce_array(parts, nprocs, bin_size)
     phots = reduce_array(phots, nprocs, bin_size)
 
