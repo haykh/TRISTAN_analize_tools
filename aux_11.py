@@ -233,6 +233,46 @@ def get_energies_vs_time(root, x_lim, norm=True, step_min=0, step_max=1):
         data.append([step, b_en/tot_en, prtl_en/tot_en, prs_en/tot_en, phot_en/tot_en])
     return np.array(data)
 
+
+def getAverageSpec(root, step, bin_size = 151, get_new_parts = False):
+    parts_ = np.zeros(bin_size)
+    phots_ = np.zeros(bin_size)
+    new_parts_ = np.zeros(bin_size)
+
+    param = h5py.File(root + 'param.{}'.format(str(step).zfill(3)), 'r')
+    nprocs = param['sizey'].value[0] * param['sizex'].value[0]
+    data = h5py.File(root + 'spec.tot.{}'.format(str(step).zfill(3)), 'r')
+    bins = data['bn'].value
+    parts = data['npart'].value
+    pairs = data['npair'].value
+    if pairs.max() > 0:
+        parts = pairs
+    phots = data['ninst'].value
+    bins = bins[:bin_size-1]
+    bins = np.append(bins.min(), bins)
+    parts = reduce_array(parts, nprocs, bin_size)
+    phots = reduce_array(phots, nprocs, bin_size)
+
+    parts_ = np.array(parts)
+    phots_ = np.array(phots)
+
+    param = h5py.File(root + 'param.{}'.format(str(step).zfill(3)), 'r')
+    nprocs = param['sizey'].value[0] * param['sizex'].value[0]
+
+    prstfname = root + 'prst.tot.{}'.format(str(step).zfill(3))
+    if os.path.isfile(prstfname) and get_new_parts:
+        data = h5py.File(prstfname, 'r')
+        if len(data['x'].value) > nprocs:
+            data = data['x'].value
+            gams = np.sqrt(data[data > 1])
+            new_parts, bns = np.histogram(gams, bins=bins)
+            new_parts = np.append(new_parts, 0)
+        new_parts_ = np.array(new_parts)
+    return {'bins': bins,
+            'parts': parts_,
+            'phots': phots_,
+            'new_parts': new_parts_}
+
 # def determineMaxDensity(root, start, end, fld):
 #     maximum = 0
 #     sizes = getSizes(root, start)
