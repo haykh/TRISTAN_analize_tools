@@ -49,8 +49,10 @@ def getSizes(root, i):
         'sizey': len(hh1)
     }
 
-def getField(root, i, param, sizes = getSizes(root, i),
+def getField(root, i, param, sizes = None,
              xmin = 0, xmax = -1, ymin = 0, ymax = -1):
+    if not sizes:
+        sizes = getSizes(root, i)
     f1 = h5py.File(root + 'flds.tot.' + str(i).zfill(3),'r')
     if param in f1.keys():
         hh = f1[param].value
