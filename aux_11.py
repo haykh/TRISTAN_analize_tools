@@ -239,7 +239,7 @@ def get_energies_vs_time(root, x_lim, norm=True, step_min=0, step_max=1):
 def getSpectrum(root, step, bin_size = 151, get_new_parts = False):
     parts_ = np.zeros(bin_size)
     phots_ = np.zeros(bin_size)
-    new_parts_ = np.zeros(bin_size)
+    new_parts = np.zeros(bin_size)
 
     param = h5py.File(root + 'param.{}'.format(str(step).zfill(3)), 'r')
     nprocs = param['sizey'].value[0] * param['sizex'].value[0]
@@ -269,11 +269,10 @@ def getSpectrum(root, step, bin_size = 151, get_new_parts = False):
             gams = np.sqrt(data[data > 1])
             new_parts, bns = np.histogram(gams, bins=bins)
             new_parts = np.append(new_parts, 0)
-        new_parts_ = np.array(new_parts)
     return {'bins': bins,
             'parts': parts_,
             'phots': phots_,
-            'new_parts': new_parts_}
+            'new_parts': np.array(new_parts)}
 
 # def determineMaxDensity(root, start, end, fld):
 #     maximum = 0
