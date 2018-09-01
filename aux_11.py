@@ -2,7 +2,6 @@ import numpy as np
 import h5py
 import os, os.path
 import pandas as pd
-from aux_11 import *
 from parser import define_variables
 from tqdm import tqdm
 
