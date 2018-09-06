@@ -273,6 +273,21 @@ def getSpectrum(root, step, bin_size = 151, get_new_parts = False):
             'phots': phots_,
             'new_parts': np.array(new_parts)}
 
+def getSpec(root, step, keywords = ('bn', 'npart', 'nphot')):
+    param = h5py.File(root + 'param.{}'.format(str(step).zfill(3)), 'r')
+    nprocs = param['sizey'].value[0] * param['sizex'].value[0]
+    data = h5py.File(root + 'spec.tot.{}'.format(str(step).zfill(3)), 'r')
+    bin_size = int(len(data['bn'].value) / nprocs)
+    bins = data['bn'].value
+    datas = []
+    for key in keywords:
+        data_temp = data[key].value
+        data_temp = reduce_array(data_temp, nprocs, bin_size)
+        datas.append(data_temp)
+    datas = np.array(datas)
+    return {key: value for (key, value) in zip(keywords, datas)}
+
+
 # def determineMaxDensity(root, start, end, fld):
 #     maximum = 0
 #     sizes = getSizes(root, start)
