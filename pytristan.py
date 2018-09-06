@@ -278,18 +278,17 @@ def getSpec(root, step, keywords = ('bn', 'npart', 'nphot')):
     nprocs = param['sizey'].value[0] * param['sizex'].value[0]
     data = h5py.File(root + 'spec.tot.{}'.format(str(step).zfill(3)), 'r')
     bin_size = int(len(data['bn'].value) / nprocs)
-    bins = data['bn'].value
     datas = []
     for key in keywords:
         data_temp = data[key].value
-        data_temp = reduce_array(data_temp, nprocs, bin_size)
-        if key == 'bn':
-            data_temp = data_temp[:-1]
+        if key == keywords[0]:
+            data_temp = data_temp[:bin_size-1]
             data_temp = np.append(10**np.floor(np.log10(data_temp.min())), data_temp)
+        else:
+            data_temp = reduce_array(data_temp, nprocs, bin_size)
         datas.append(data_temp)
     datas = np.array(datas)
     return {key: value for (key, value) in zip(keywords, datas)}
-
 
 # def determineMaxDensity(root, start, end, fld):
 #     maximum = 0
