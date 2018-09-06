@@ -283,6 +283,9 @@ def getSpec(root, step, keywords = ('bn', 'npart', 'nphot')):
     for key in keywords:
         data_temp = data[key].value
         data_temp = reduce_array(data_temp, nprocs, bin_size)
+        if key == 'bn':
+            data_temp = data_temp[:-1]
+            data_temp = np.append(10**np.floor(np.log10(data_temp.min())), data_temp)
         datas.append(data_temp)
     datas = np.array(datas)
     return {key: value for (key, value) in zip(keywords, datas)}
