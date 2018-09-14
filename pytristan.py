@@ -17,6 +17,7 @@ def getPlasma(root, i):
                            'g': np.concatenate((gammae, gammai)),
                            'ind': np.concatenate((data2['inde'].value, data2['indi'].value)),
                            'ch': np.concatenate(([-1] * len(data2['xe'].value), [1] * len(data2['xi'].value)))
+                           'chiR': np.concatenate((data2['flde'].value, data2['fldi'].value)),
                           })
     return plasma
 
