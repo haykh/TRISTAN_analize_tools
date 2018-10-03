@@ -291,6 +291,63 @@ def getSpec(root, step, keywords = ('bn', 'npart', 'nphot')):
     datas = np.array(datas)
     return {key: value for (key, value) in zip(keywords, datas)}
 
+def scroll_images(root, field, steps, cmap='plasma', vmin=0.1, vmax=200):
+    import matplotlib.pyplot as plt
+    import numpy as np
+    cmap = copy(plt.get_cmap(cmap))
+    cmap.set_bad(cmap(0))
+    n = len(steps)
+    flds = []
+    for i in range(n):
+        step = steps[i]
+        data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)), 'r')
+        flds.append(data[field].value[0])
+
+    def remove_keymap_conflicts(new_keys_set):
+        for prop in plt.rcParams:
+            if prop.startswith('keymap.'):
+                keys = plt.rcParams[prop]
+                remove_list = set(keys) & new_keys_set
+                for key in remove_list:
+                    keys.remove(key)
+
+    def multi_slice_viewer(volume):
+        remove_keymap_conflicts({'j', 'k'})
+        fig, ax = plt.subplots()
+        ax.volume = volume
+        ax.index = 0
+        im = ax.imshow(volume[0], norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax), cmap=cmap)
+        ax.set_title(steps[0])
+
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.05)
+        plt.colorbar(im, cax=cax);
+
+        fig.canvas.mpl_connect('key_press_event', process_key)
+
+    def process_key(event):
+        fig = event.canvas.figure
+        ax = fig.axes[0]
+        if event.key == 'j':
+            previous_slice(ax)
+        elif event.key == 'k':
+            next_slice(ax)
+        fig.canvas.draw()
+
+    def previous_slice(ax):
+        volume = ax.volume
+        ax.index = (ax.index - 1) % n  # wrap around using %
+        ax.images[0].set_array(volume[ax.index])
+        ax.set_title(steps[ax.index])
+
+    def next_slice(ax):
+        volume = ax.volume
+        ax.index = (ax.index + 1) % n
+        ax.images[0].set_array(volume[ax.index])
+        ax.set_title(steps[ax.index])
+
+    multi_slice_viewer(flds)
+
 # def determineMaxDensity(root, start, end, fld):
 #     maximum = 0
 #     sizes = getSizes(root, start)
