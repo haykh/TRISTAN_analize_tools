@@ -294,6 +294,10 @@ def getSpec(root, step, keywords = ('bn', 'npart', 'nphot')):
 def scroll_images(root, field, steps, cmap='plasma', vmin=0.1, vmax=200):
     import matplotlib.pyplot as plt
     import numpy as np
+    from copy import copy
+    import h5py
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    import matplotlib as mpl
     cmap = copy(plt.get_cmap(cmap))
     cmap.set_bad(cmap(0))
     n = len(steps)
