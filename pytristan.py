@@ -297,6 +297,7 @@ def scroll_images(root, field, steps, istep = 4,
                   draw_procs = False
                   ):
     import matplotlib.pyplot as plt
+    import matplotlib.patches as patches
     import numpy as np
     from copy import copy
     import h5py
