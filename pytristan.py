@@ -323,7 +323,13 @@ def scroll_images(root, field, steps,
         fig, ax = plt.subplots()
         ax.volume = volume
         ax.index = 0
-        im = ax.imshow(volume[0], norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax), cmap=cmap)
+        xmin = 0
+        xmax = len(volume[0][0])
+        ymin = 0
+        ymax = len(volume[0])
+        im = ax.imshow(volume[0],
+                       norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax),
+                       cmap=cmap, extent=(xmin,xmax,ymin,ymax))
         ax.set_title(steps[0])
 
         divider = make_axes_locatable(ax)
@@ -346,13 +352,23 @@ def scroll_images(root, field, steps,
     def previous_slice(ax):
         volume = ax.volume
         ax.index = (ax.index - 1) % n  # wrap around using %
+        xmin = 0
+        xmax = len(volume[ax.index][0])
+        ymin = 0
+        ymax = len(volume[ax.index])
         ax.images[0].set_array(volume[ax.index])
+        ax.images[0].set_extent((xmin,xmax,ymin,ymax))
         ax.set_title(steps[ax.index])
 
     def next_slice(ax):
         volume = ax.volume
         ax.index = (ax.index + 1) % n
+        xmin = 0
+        xmax = len(volume[ax.index][0])
+        ymin = 0
+        ymax = len(volume[ax.index])
         ax.images[0].set_array(volume[ax.index])
+        ax.images[0].set_extent((xmin,xmax,ymin,ymax))
         ax.set_title(steps[ax.index])
 
     multi_slice_viewer(flds)
