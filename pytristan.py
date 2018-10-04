@@ -293,7 +293,8 @@ def getSpec(root, step, keywords = ('bn', 'npart', 'nphot')):
 
 def scroll_images(root, field, steps, istep = 4,
                   cmap='plasma', vmin=0.1, vmax=200,
-                  overplot = lambda ax: ax
+                  overplot = lambda ax: ax,
+                  draw_procs = False
                   ):
     import matplotlib.pyplot as plt
     import numpy as np
@@ -336,6 +337,17 @@ def scroll_images(root, field, steps, istep = 4,
         cax = divider.append_axes("right", size="5%", pad=0.05)
         plt.colorbar(im, cax=cax);
 
+        if draw_procs:
+            cpus = h5py.File(root + 'cpus.box.{}'.format(str(steps[ax.index]).zfill(3)), 'r')
+            ranks = cpus['rank'].value
+            xmins = cpus['xmin'].value
+            sizexs = cpus['xmax'].value - xmins
+            ymins = cpus['ymin'].value
+            sizeys = cpus['ymax'].value - ymins
+            for rnk, xm, sx, ym, sy in zip(ranks, xmins, sizexs, ymins, sizeys):
+                p = patches.Rectangle((xm, ym), sx, sy, linewidth=0.2, edgecolor='w', facecolor='none')
+                ax.add_artist(p)
+
         ax = overplot(ax)
 
         fig.canvas.mpl_connect('key_press_event', process_key)
@@ -359,6 +371,17 @@ def scroll_images(root, field, steps, istep = 4,
         ax.images[0].set_array(volume[ax.index])
         ax.images[0].set_extent((xmin,xmax,ymin,ymax))
         ax.set_title(steps[ax.index])
+        if draw_procs:
+            cpus = h5py.File(root + 'cpus.box.{}'.format(str(steps[ax.index]).zfill(3)), 'r')
+            ranks = cpus['rank'].value
+            xmins = cpus['xmin'].value
+            sizexs = cpus['xmax'].value - xmins
+            ymins = cpus['ymin'].value
+            sizeys = cpus['ymax'].value - ymins
+            for rnk, xm, sx, ym, sy, art in zip(ranks, xmins, sizexs, ymins, sizeys, ax.artists):
+                art.set_xy((xm, ym))
+                art.set_height(sy)
+                art.set_width(sx)
 
     def next_slice(ax):
         volume = ax.volume
@@ -370,6 +393,17 @@ def scroll_images(root, field, steps, istep = 4,
         ax.images[0].set_array(volume[ax.index])
         ax.images[0].set_extent((xmin,xmax,ymin,ymax))
         ax.set_title(steps[ax.index])
+        if draw_procs:
+            cpus = h5py.File(root + 'cpus.box.{}'.format(str(steps[ax.index]).zfill(3)), 'r')
+            ranks = cpus['rank'].value
+            xmins = cpus['xmin'].value
+            sizexs = cpus['xmax'].value - xmins
+            ymins = cpus['ymin'].value
+            sizeys = cpus['ymax'].value - ymins
+            for rnk, xm, sx, ym, sy, art in zip(ranks, xmins, sizexs, ymins, sizeys, ax.artists):
+                art.set_xy((xm, ym))
+                art.set_height(sy)
+                art.set_width(sx)
 
     multi_slice_viewer(flds)
 
