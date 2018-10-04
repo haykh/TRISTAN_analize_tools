@@ -291,7 +291,7 @@ def getSpec(root, step, keywords = ('bn', 'npart', 'nphot')):
     datas = np.array(datas)
     return {key: value for (key, value) in zip(keywords, datas)}
 
-def scroll_images(root, field, steps,
+def scroll_images(root, field, steps, istep = 4,
                   cmap='plasma', vmin=0.1, vmax=200,
                   overplot = lambda ax: ax
                   ):
@@ -324,9 +324,9 @@ def scroll_images(root, field, steps,
         ax.volume = volume
         ax.index = 0
         xmin = 0
-        xmax = len(volume[0][0])
+        xmax = len(volume[0][0]) * istep
         ymin = 0
-        ymax = len(volume[0])
+        ymax = len(volume[0]) * istep
         im = ax.imshow(volume[0],
                        norm=mpl.colors.LogNorm(vmin=vmin, vmax=vmax),
                        cmap=cmap, extent=(xmin,xmax,ymin,ymax))
@@ -353,9 +353,9 @@ def scroll_images(root, field, steps,
         volume = ax.volume
         ax.index = (ax.index - 1) % n  # wrap around using %
         xmin = 0
-        xmax = len(volume[ax.index][0])
+        xmax = len(volume[ax.index][0]) * istep
         ymin = 0
-        ymax = len(volume[ax.index])
+        ymax = len(volume[ax.index]) * istep
         ax.images[0].set_array(volume[ax.index])
         ax.images[0].set_extent((xmin,xmax,ymin,ymax))
         ax.set_title(steps[ax.index])
@@ -364,9 +364,9 @@ def scroll_images(root, field, steps,
         volume = ax.volume
         ax.index = (ax.index + 1) % n
         xmin = 0
-        xmax = len(volume[ax.index][0])
+        xmax = len(volume[ax.index][0]) * istep
         ymin = 0
-        ymax = len(volume[ax.index])
+        ymax = len(volume[ax.index]) * istep
         ax.images[0].set_array(volume[ax.index])
         ax.images[0].set_extent((xmin,xmax,ymin,ymax))
         ax.set_title(steps[ax.index])
