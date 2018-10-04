@@ -291,7 +291,10 @@ def getSpec(root, step, keywords = ('bn', 'npart', 'nphot')):
     datas = np.array(datas)
     return {key: value for (key, value) in zip(keywords, datas)}
 
-def scroll_images(root, field, steps, cmap='plasma', vmin=0.1, vmax=200):
+def scroll_images(root, field, steps,
+                  cmap='plasma', vmin=0.1, vmax=200,
+                  overplot = lambda ax: ax
+                  ):
     import matplotlib.pyplot as plt
     import numpy as np
     from copy import copy
@@ -326,6 +329,8 @@ def scroll_images(root, field, steps, cmap='plasma', vmin=0.1, vmax=200):
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.05)
         plt.colorbar(im, cax=cax);
+
+        ax = overplot(ax)
 
         fig.canvas.mpl_connect('key_press_event', process_key)
 
