@@ -408,6 +408,160 @@ def scroll_images(root, field, steps, istep = 4,
 
     multi_slice_viewer(flds)
 
+
+def drawPanels(root, panels, steps,
+         istep = 4,
+         mykeys = ['j', 'k'], figsize=(5, 3)):
+    import h5py
+    import numpy as np
+    from copy import copy
+    import matplotlib.pyplot as plt
+    import matplotlib.patches as patches
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    import matplotlib as mpl
+    from matplotlib import rc
+    rc('font', **{'family': 'serif', 'serif': ['Helvetica'], 'size': 15})
+    rc('text', usetex=True)
+    plt.style.use('fast')
+
+    ncols = 2
+    nrows = int(np.ceil(len(panels) / ncols))
+    figsize=(figsize[0] * ncols, figsize[1] * nrows)
+
+    mykeys_dict = {mykeys[0], mykeys[1]}
+    n = len(steps)
+    fields = dict()
+    cmaps = dict()
+    normfuncs = dict()
+    vmins = dict()
+    vmaxs = dict()
+
+    def read_data():
+        # read data for all steps and save to dict
+        for step in steps:
+            data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)), 'r')
+            for panel in panels:
+                fld_name = panel['name']
+                value = panel['value']
+                if type(value) == type('string'):
+                    new_data = data[value].value[0]
+                else:
+                    new_data = value(data)
+                try:
+                    fields[fld_name].append(new_data)
+                except:
+                    fields[fld_name] = [new_data]
+                if step == steps[0]: # do only once
+                    # read colormaps
+                    try:
+                        cmap = panel['cmap']
+                    except:
+                        cmap = 'viridis'
+                    cmap = copy(plt.get_cmap(cmap))
+                    cmap.set_bad(cmap(0))
+                    cmaps[fld_name] = cmap
+                    # read boundaries
+                    try:
+                        vmin = panel['vmin']
+                    except:
+                        vmin = 1e-1
+                    vmins[fld_name] = vmin
+                    try:
+                        vmax = panel['vmax']
+                    except:
+                        vmax = 200.
+                    vmaxs[fld_name] = vmax
+                    # read norms
+                    try:
+                        norm = panel['norm']
+                    except:
+                        norm = 'log'
+                    if norm == 'log':
+                        normfunc = mpl.colors.LogNorm
+                    else:
+                        normfunc = mpl.colors.Normalize
+                    normfuncs[fld_name] = normfunc
+
+    def remove_keymap_conflicts(new_keys_set):
+        for prop in plt.rcParams:
+            if prop.startswith('keymap.'):
+                keys = plt.rcParams[prop]
+                remove_list = set(keys) & new_keys_set
+                for key in remove_list:
+                    keys.remove(key)
+
+    def redraw(ax):
+        volume = ax.volume
+        xmin = 0
+        xmax = len(volume[ax.index][0]) * istep
+        ymin = 0
+        ymax = len(volume[ax.index]) * istep
+        ax.images[0].set_array(volume[ax.index])
+        ax.images[0].set_extent((xmin,xmax,ymin,ymax))
+
+    def initialize():
+        remove_keymap_conflicts(mykeys_dict)
+        fig, axes = plt.subplots(nrows, 2, figsize=figsize)
+        for ii in range(ncols * nrows):
+            if nrows == 1:
+                ax = axes[ii]
+            else:
+                ax = axes[int(np.floor(ii / ncols))][ii % ncols]
+            if ii >= len(panels):
+                panel = panels[-1]
+                fld_name = ''
+                field = fields[panel['name']]
+                im = ax.imshow(np.array(field[0]) * 0.)
+                ax.update = False
+            else:
+                panel = panels[ii]
+                fld_name = panel['name']
+                panel = panels[ii]
+                vmin = vmins[fld_name]
+                vmax = vmaxs[fld_name]
+                cmap = cmaps[fld_name]
+                field = fields[fld_name]
+                normfunc = normfuncs[fld_name]
+                im = ax.imshow(field[0], norm=normfunc(vmin=vmin, vmax=vmax), cmap=cmap)
+                divider = make_axes_locatable(ax)
+                cax = divider.append_axes("right", size="5%", pad=0.05)
+                cbar = plt.colorbar(im, cax=cax, label=fld_name)
+                ax.update = True
+            ax.set_aspect(1)
+            ax.volume = field
+            ax.index = 0
+            redraw(ax)
+        fig.index = 0
+        fig.suptitle(steps[fig.index])
+        fig.canvas.mpl_connect('key_press_event', process_key)
+
+    def process_key(event):
+        fig = event.canvas.figure
+        if event.key == mykeys[0]:
+            fig.index = (fig.index - 1) % n
+            fig.suptitle(steps[fig.index])
+            for ax in fig.axes:
+                if ax.update:
+                    prev_step(ax)
+        elif event.key == mykeys[1]:
+            fig.index = (fig.index + 1) % n
+            fig.suptitle(steps[fig.index])
+            for ax in fig.axes:
+                if ax.update:
+                    next_step(ax)
+        fig.canvas.draw()
+
+    def prev_step(ax):
+        ax.index = (ax.index - 1) % n
+        redraw(ax)
+
+    def next_step(ax):
+        ax.index = (ax.index + 1) % n
+        redraw(ax)
+
+    read_data()
+    initialize()
+
 # def determineMaxDensity(root, start, end, fld):
 #     maximum = 0
 #     sizes = getSizes(root, start)
