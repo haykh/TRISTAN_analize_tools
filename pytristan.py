@@ -217,7 +217,11 @@ def track_energy(root, step, x_lim=200):
         v = data['vp'].value
         w = data['wp'].value
         ch = data['chp'].value
-        phot_en = np.sum(np.sqrt(u**2 + v**2 + w**2) * ch) * stride
+        ee = np.sqrt(u**2 + v**2 + w**2)
+        indexes = (ee > 1)
+        ee = ee[indexes]
+        ch = ch[indexes]
+        phot_en = np.sum(ee * ch) * stride
     else:
         phot_en = 0
 
