@@ -225,9 +225,9 @@ def track_energy(root, step, x_lim=200):
             prtl_en, prs_en,
             phot_en)
 
-def get_energies_vs_time(root, x_lim, norm=True, step_min=0, step_max=1):
+def get_energies_vs_time(root, x_lim, norm=True, steps):
     data = []
-    for step in tqdm(range(step_min, step_max + 1)):
+    for step in tqdm(steps):
         b_en, prtl_en, prs_en, phot_en = track_energy(root, step, x_lim)
         if norm:
             tot_en = b_en + prtl_en + prs_en + phot_en
