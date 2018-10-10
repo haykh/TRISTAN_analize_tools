@@ -9,8 +9,8 @@ def getPlasma(root, i):
     data2 = h5py.File(root + 'prtl.tot.' + str(i).zfill(3),'r')
     gammae = np.sqrt(1. + data2['ue'].value**2 + data2['ve'].value**2 + data2['we'].value**2)
     gammai = np.sqrt(1. + data2['ui'].value**2 + data2['vi'].value**2 + data2['wi'].value**2)
-    inde = data2['inde'].value + data2['proce'].value * 1e9
-    indi = data2['indi'].value + data2['proci'].value * 1e9
+    inde = np.sign(data2['inde'].value) * (data2['inde'].value + data2['proce'].value * 1e9)
+    indi = np.sign(data2['indi'].value) * (data2['indi'].value + data2['proci'].value * 1e9)
     plasma = pd.DataFrame({'x': np.concatenate((data2['xe'].value, data2['xi'].value)),
                            'y': np.concatenate((data2['ye'].value, data2['yi'].value)),
                            'u': np.concatenate((data2['ue'].value, data2['ui'].value)),
