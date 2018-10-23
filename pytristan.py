@@ -569,6 +569,14 @@ def drawPanels(root, panels, steps,
 
 
 def reconnectionDiagnostics(root, steps, parameters=None):
+    import numpy as np
+    from tqdm import tqdm_notebook
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+    from scipy.optimize import curve_fit
+    from matplotlib import rc
+
     try:
         L = parameters['L']
     except:
@@ -591,11 +599,7 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     g_star = 20
     step_to_time = interval / (rL / c)
     cell_to_rl = istep / rL
-
-    import matplotlib.pyplot as plt
-    from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-    from scipy.optimize import curve_fit
-    from matplotlib import rc
+    
     rc('font', **{'family': 'serif', 'serif': ['Helvetica'], 'size': 10})
     rc('text', usetex=True)
     plt.style.use('fast')
