@@ -567,6 +567,161 @@ def drawPanels(root, panels, steps,
     read_data()
     initialize()
 
+
+def reconnectionDiagnostics(root, steps, parameters=None):
+    try:
+        L = parameters['L']
+    except:
+        L = 14000.
+    try:
+        sigma = parameters['sigma']
+    except:
+        sigma = 10.
+    try:
+        interval = parameters['interval']
+    except:
+        interval = 500
+    try:
+        sd = parameters['skin_depth']
+    except:
+        sd = 5.
+    rL = np.sqrt(sigma) * sd
+    istep = 4
+    c = 0.45
+    g_star = 20
+    step_to_time = interval / (rL / c)
+    cell_to_rl = istep / rL
+
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+    from scipy.optimize import curve_fit
+    from matplotlib import rc
+    rc('font', **{'family': 'serif', 'serif': ['Helvetica'], 'size': 10})
+    rc('text', usetex=True)
+    plt.style.use('fast')
+
+    # density
+    def get_profile(root, steps):
+        flds = []
+        for step in tqdm_notebook(steps, leave=False):
+            data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)))
+            flds.append(np.mean(data['dens'].value[0], axis=1))
+        return np.array(flds)
+
+    data1 = get_profile(root, steps)
+
+    Y = steps * step_to_time
+    X = np.arange(len(data1[0])) * cell_to_rl
+
+    # inflow
+    def get_inflows(root, steps):
+        infs = []
+        for step in tqdm_notebook(steps, leave=False):
+            data = h5py.File(root + 'flds.tot.{}'.format(str(step).zfill(3)))
+            beta_x = data['v3x'].value[0]
+            mid_ = int(len(beta_x[0]) / 2)
+            beta_x = np.abs(beta_x[:, mid_ - int(mid_ * 0.2) : mid_ + int(mid_ * 0.2)])
+            infs.append(np.mean(beta_x))
+        return np.array(infs)
+    data2 = get_inflows(root, steps)
+
+    plt.figure(figsize=(15,8))
+    ax_dens = plt.subplot2grid((3, 2), (0, 0), rowspan=2)
+    ax_spec = plt.subplot(322)
+    ax_gam = plt.subplot(324)
+    ax_pow = plt.subplot(326)
+    ax_inf = plt.subplot(325)
+
+    ax_dens.pcolorfast(X, Y, data1, cmap='plasma');
+    ax_dens.set_xlabel(r'$x$ [$r_L$]')
+    ax_dens.set_ylabel(r'$t$ [$r_{L}/c$]')
+    ax_dens.set_xlim(X.min(), X.max())
+    ax_dens.set_ylim(Y.min(), Y.max())
+
+    ax_inf.plot(Y, data2, c='red')
+    ax_inf.set_xlabel(r'$ct/r_{\rm L}$')
+    ax_inf.set_ylabel(r'$\beta_{\rm in}$')
+    ax_inf.set_xscale('log')
+    ax_inf.set_xlim(1e2, max(Y)*1.2)
+
+    # spectrum
+    if len(steps) > 50:
+        inter = int(len(steps) / 50.)
+        steps_spec = steps[0:-1:inter]
+    else:
+        steps_spec = steps
+    times = steps_spec * interval / (rL / c)
+    cols = plt.cm.viridis(np.linspace(0, 1, len(steps_spec)))
+    for ii, step in zip(range(len(steps_spec)), steps_spec):
+        spec = getSpec(root, step)
+        im = ax_spec.plot(spec['bn'], spec['npart'], c=cols[ii])
+
+    sm = plt.cm.ScalarMappable(cmap='viridis')
+    sm.set_array(np.linspace(times.min(), times.max(), 10))
+    cbaxes = inset_axes(ax_spec, width="40%", height="5%", loc='upper right',
+                        bbox_to_anchor=(-0.01, 0.46, 1, 0.5), bbox_transform=ax_spec.transAxes)
+    cb = plt.colorbar(sm, cax=cbaxes, orientation='horizontal')
+    cb.ax.xaxis.set_ticks_position('bottom')
+    cb.ax.xaxis.set_label_position('top')
+    cb.set_label(r'$ct/r_L$')
+
+    ax_spec.set_ylim(1e2, 2e7)
+    ax_spec.set_xlim(1e-1, 1e4)
+    ax_spec.set_xscale('log')
+    ax_spec.set_yscale('log');
+    ax_spec.set_xlabel(r'$\gamma-1$')
+    ax_spec.set_ylabel(r'$(\gamma-1)f(\gamma)$');
+
+    # fits
+    def func(x, n0, p, g_cut):
+        return n0 * (x - 1) * (x / g_star)**(-p) * np.exp(-x / g_cut)
+    tts = []
+    gcuts = []
+    gmaxs = []
+    pows = []
+    times = steps_spec * interval / (rL / c)
+    for ii, step in zip(range(len(steps_spec)), steps_spec):
+        spec = getSpec(root, step)
+        xs = spec['bn']
+        ys = spec['npart']
+        indices = (xs + 1 > g_star)
+        ys1 = ys[indices]
+        xs1 = xs[indices]
+        gmax = np.trapz((xs1 + 1)**5 * ys1 / xs1, xs1+1) / np.trapz((xs1 + 1)**4 * ys1 / xs1, xs1 + 1)
+        gmaxs.append(gmax)
+        popt, pcov = curve_fit(func, xs1, ys1, bounds=([0, 1, 2], [np.inf, 5, 1e3]))
+        pows.append(popt[1])
+        gcuts.append(popt[2])
+        tts.append(times[ii])
+
+    xs = tts[1:]
+    ys = np.sqrt(tts[1:] / tts[3]) * (gcuts[3] + gmaxs[3])*0.5
+    ax_gam.plot(xs, ys, c=[.7]*3, ls='--', zorder=-1)
+    ys = (tts[1:] / tts[3]) * (gcuts[3] + gmaxs[3])*0.5
+    ax_gam.plot(xs, ys, c=[.7]*3, ls=':', zorder=-1)
+
+    ax_gam.scatter(tts, gcuts, label=r'$\gamma_{\rm cut}$', c='blue')
+    ax_gam.scatter(tts, gmaxs, label=r'$\gamma_{\rm max}$', c='red')
+    ax_gam.set_xscale('log')
+    ax_gam.set_yscale('log')
+    ax_gam.legend()
+    ax_gam.set_xlabel(r'$tc/r_L$')
+    ax_gam.set_ylabel(r'$\gamma$');
+    ax_gam.set_xlim(1e2, max(tts)*1.2)
+
+    ax_pow.scatter(tts, pows, label=r'$p$', c='brown')
+    xs = tts
+    ys = np.array(tts)*0 + 2
+    ax_pow.plot(xs, ys, c=[.7]*3, ls='--', zorder=-1)
+    ax_pow.set_xlim(1e2, max(tts)*1.2)
+    ax_pow.set_ylim(1.2, 2.5)
+    ax_pow.set_xlabel(r'$tc/r_L$')
+    ax_pow.set_ylabel(r'$p$');
+    ax_pow.set_xscale('log')
+
+    plt.tight_layout();
+
+
 # def determineMaxDensity(root, start, end, fld):
 #     maximum = 0
 #     sizes = getSizes(root, start)
