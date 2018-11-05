@@ -599,7 +599,7 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     g_star = 20
     step_to_time = interval / (rL / c)
     cell_to_rl = istep / rL
-    
+
     rc('font', **{'family': 'serif', 'serif': ['Helvetica'], 'size': 10})
     rc('text', usetex=True)
     plt.style.use('fast')
@@ -641,6 +641,9 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     ax_dens.set_ylabel(r'$t$ [$r_{L}/c$]')
     ax_dens.set_xlim(X.min(), X.max())
     ax_dens.set_ylim(Y.min(), Y.max())
+    ax2_dens = ax_dens.twinx()
+    ax2_dens.set_ylabel(r"steps")
+    ax2_dens.set_ylim(steps.min(), steps.max())
 
     ax_inf.plot(Y, data2, c='red')
     ax_inf.set_xlabel(r'$ct/r_{\rm L}$')
