@@ -568,7 +568,7 @@ def drawPanels(root, panels, steps,
     initialize()
 
 
-def reconnectionDiagnostics(root, steps, parameters=None):
+def reconnectionDiagnostics(root, steps, parameters=None, unit_convert=True, plt_size=(15,8)):
     import numpy as np
     from tqdm import tqdm_notebook
     import matplotlib as mpl
@@ -597,8 +597,12 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     istep = 4
     c = 0.45
     g_star = 20
-    step_to_time = interval / (rL / c)
-    cell_to_rl = istep / rL
+    if unit_convert:
+        step_to_time = interval / (rL / c)
+        cell_to_rl = istep / rL
+    else:
+        step_to_time = 1
+        cell_to_rl = istep
 
     rc('font', **{'family': 'serif', 'serif': ['Helvetica'], 'size': 10})
     rc('text', usetex=True)
@@ -629,7 +633,7 @@ def reconnectionDiagnostics(root, steps, parameters=None):
         return np.array(infs)
     data2 = get_inflows(root, steps)
 
-    plt.figure(figsize=(15,8))
+    plt.figure(figsize=plt_size)
     ax_dens = plt.subplot2grid((3, 2), (0, 0), rowspan=2)
     ax_spec = plt.subplot(322)
     ax_gam = plt.subplot(324)
@@ -637,8 +641,12 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     ax_inf = plt.subplot(325)
 
     ax_dens.pcolorfast(X, Y, data1, cmap='plasma');
-    ax_dens.set_xlabel(r'$x$ [$r_L$]')
-    ax_dens.set_ylabel(r'$t$ [$r_{L}/c$]')
+    if unit_convert:
+        ax_dens.set_xlabel(r'$x$ [$r_L$]')
+        ax_dens.set_ylabel(r'$t$ [$r_{L}/c$]')
+    else:
+        ax_dens.set_xlabel(r'$x$ [cells]')
+        ax_dens.set_ylabel(r'$t$ [steps]')
     ax_dens.set_xlim(X.min(), X.max())
     ax_dens.set_ylim(Y.min(), Y.max())
     ax2_dens = ax_dens.twinx()
@@ -646,7 +654,10 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     ax2_dens.set_ylim(steps.min(), steps.max())
 
     ax_inf.plot(Y, data2, c='red')
-    ax_inf.set_xlabel(r'$ct/r_{\rm L}$')
+    if unit_convert:
+        ax_inf.set_xlabel(r'$ct/r_{\rm L}$')
+    else:
+        ax_inf.set_xlabel(r'$t$ [steps]')
     ax_inf.set_ylabel(r'$\beta_{\rm in}$')
     ax_inf.set_xscale('log')
     ax_inf.set_xlim(1e2, max(Y)*1.2)
@@ -670,7 +681,11 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     cb = plt.colorbar(sm, cax=cbaxes, orientation='horizontal')
     cb.ax.xaxis.set_ticks_position('bottom')
     cb.ax.xaxis.set_label_position('top')
-    cb.set_label(r'$ct/r_L$')
+    if unit_convert:
+        cb.set_label(r'$ct/r_L$')
+    else:
+        cb.set_label(r'$t$ [steps]')
+
 
     ax_spec.set_ylim(1e2, 2e7)
     ax_spec.set_xlim(1e-1, 1e4)
@@ -712,7 +727,10 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     ax_gam.set_xscale('log')
     ax_gam.set_yscale('log')
     ax_gam.legend()
-    ax_gam.set_xlabel(r'$tc/r_L$')
+    if unit_convert:
+        ax_gam.set_xlabel(r'$tc/r_L$')
+    else:
+        ax_gam.set_xlabel(r'$t$ [steps]')
     ax_gam.set_ylabel(r'$\gamma$');
     ax_gam.set_xlim(1e2, max(tts)*1.2)
 
@@ -722,7 +740,10 @@ def reconnectionDiagnostics(root, steps, parameters=None):
     ax_pow.plot(xs, ys, c=[.7]*3, ls='--', zorder=-1)
     ax_pow.set_xlim(1e2, max(tts)*1.2)
     ax_pow.set_ylim(1.2, 2.5)
-    ax_pow.set_xlabel(r'$tc/r_L$')
+    if unit_convert:
+        ax_pow.set_xlabel(r'$tc/r_L$')
+    else:
+        ax_pow.set_xlabel(r'$t$ [steps]')
     ax_pow.set_ylabel(r'$p$');
     ax_pow.set_xscale('log')
 
